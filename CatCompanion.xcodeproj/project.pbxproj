@@ -1,0 +1,585 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0019B94FEA8A41969AB21BA0 /* PetWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1898853DDEA4C90B6017853 /* PetWindowController.swift */; };
+		6A4D91A0B0D146F8A1201001 /* AssistantChatWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4D91A0B0D146F8A1202001 /* AssistantChatWindowController.swift */; };
+		6A4D91A0B0D146F8A1201002 /* AssistantChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4D91A0B0D146F8A1202002 /* AssistantChatView.swift */; };
+		6A4D91A0B0D146F8A1201003 /* LocalSpeechRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4D91A0B0D146F8A1202003 /* LocalSpeechRuntime.swift */; };
+		7B1DCCDABEC14F4B9C117001 /* AudioDeviceCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1DCCDABEC14F4B9C117002 /* AudioDeviceCatalog.swift */; };
+		D1A7E7F90123456789ABC001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D1A7E7F90123456789ABC201 /* Localizable.strings */; };
+		D1A7E7F90123456789ABC002 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D1A7E7F90123456789ABC202 /* InfoPlist.strings */; };
+		D1A7E7F90123456789ABC301 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D1A7E7F90123456789ABC302 /* Assets.xcassets */; };
+		1FB80D9C8F474D8BA44C3B11 /* ReminderScheduleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C63AC8844F9E4439A37EAAD2 /* ReminderScheduleTests.swift */; };
+		BC1D2E3F4A5B6C7D8E9F0012 /* ReminderEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1D2E3F4A5B6C7D8E9F0011 /* ReminderEngineTests.swift */; };
+		AB1C2D3E4F5061728394A5B7 /* SettingsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1C2D3E4F5061728394A5B6 /* SettingsStoreTests.swift */; };
+		2C158CF2DBCD4C4CA2443940 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6360051B5F46446F87BB0858 /* UserNotifications.framework */; };
+		3DE7BA4F978D47579684D92E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D963DAE1F1E94AC0B011B753 /* AppKit.framework */; };
+		49F8208784D046BEB6E97464 /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFC7731205A44EBA3622623 /* PetView.swift */; };
+		58B705E2F8134478842ED287 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4267D4B3DBF14C30A7D84FDF /* XCTest.framework */; };
+		68F1561FCD654E90ACC60C57 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D098E15019C40E58020F177 /* SettingsStore.swift */; };
+		78FB6D46ECF54B7682C37D31 /* ReminderEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8079BE6A294417A525181F /* ReminderEngine.swift */; };
+		870DEACD93D847ADABAAC56F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48305471E9C04193BD549B55 /* NotificationManager.swift */; };
+		871671D1AB484705A08A0508 /* ReminderTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254AD27E051C4A4386F8CE86 /* ReminderTypes.swift */; };
+		893787303333440191D2FEE7 /* CatCompanionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36401C4A85EA4B16A93E3052 /* CatCompanionApp.swift */; };
+		932062184BB54152AE755EB3 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441DD2815B2F413DBC6C232E /* AppModel.swift */; };
+		9EC5D5CCA0254263AD9B5DA5 /* ReminderBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3A795D551C45AEAF0A56E1 /* ReminderBubbleView.swift */; };
+		C35BD982C677434A900E16AA /* libCatCompanionCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1988D046F70B42A1BFFC79B6 /* libCatCompanionCore.a */; };
+		C8A51486D0834AB5BFFB1FFF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C4D02F8D9C4A9D8ACCB140 /* SwiftUI.framework */; };
+		E02CDF6258D94274AF113A79 /* ReminderSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A115E50257E4400685E92DEA /* ReminderSchedule.swift */; };
+		E0382ADDB4C541E69C073BAD /* libCatCompanionCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1988D046F70B42A1BFFC79B6 /* libCatCompanionCore.a */; };
+		E81FC46F842F4AA0B70A36C3 /* PetRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5038EC23DDA43D4A5AFCD40 /* PetRootView.swift */; };
+		E9D4BB3206404257B93EB4B5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E5A4B9B8346569F83E34F /* AppDelegate.swift */; };
+		EDEFBE93CAA74F8AB022F1B9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A3C6384A9041DBBA818AAB /* SettingsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4232AE2F38FB4563939AE709 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ECE4920C762540A1BF8D7AA8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5ACA217AE93B45C68F044A73;
+			remoteInfo = CatCompanionCore;
+		};
+		C1B3ABF9BEE64BA091A039FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ECE4920C762540A1BF8D7AA8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5ACA217AE93B45C68F044A73;
+			remoteInfo = CatCompanionCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		05A27FF7B8B94E1EB8B2CFCD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1890B5D5FF654E9A97345540 /* CatCompanionApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CatCompanionApp.entitlements; sourceTree = "<group>"; };
+		D1A7E7F90123456789ABC302 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D1A7E7F90123456789ABC101 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D1A7E7F90123456789ABC102 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D1A7E7F90123456789ABC103 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		D1A7E7F90123456789ABC104 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		D1A7E7F90123456789ABC111 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D1A7E7F90123456789ABC112 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D1A7E7F90123456789ABC113 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		D1A7E7F90123456789ABC114 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		1988D046F70B42A1BFFC79B6 /* libCatCompanionCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libCatCompanionCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		254AD27E051C4A4386F8CE86 /* ReminderTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderTypes.swift; sourceTree = "<group>"; };
+		36401C4A85EA4B16A93E3052 /* CatCompanionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatCompanionApp.swift; sourceTree = "<group>"; };
+		4267D4B3DBF14C30A7D84FDF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
+		441DD2815B2F413DBC6C232E /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		48305471E9C04193BD549B55 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		4AFC7731205A44EBA3622623 /* PetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetView.swift; sourceTree = "<group>"; };
+		4D098E15019C40E58020F177 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+		6A4D91A0B0D146F8A1202001 /* AssistantChatWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantChatWindowController.swift; sourceTree = "<group>"; };
+		6A4D91A0B0D146F8A1202002 /* AssistantChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantChatView.swift; sourceTree = "<group>"; };
+		6A4D91A0B0D146F8A1202003 /* LocalSpeechRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSpeechRuntime.swift; sourceTree = "<group>"; };
+		7B1DCCDABEC14F4B9C117002 /* AudioDeviceCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDeviceCatalog.swift; sourceTree = "<group>"; };
+		58446BBDBE36498D9E0B6C67 /* CatCompanionCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = CatCompanionCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6360051B5F46446F87BB0858 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		6D0E5A4B9B8346569F83E34F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8351634D881E44838E22BDBF /* CatCompanion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = CatCompanion.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B3A795D551C45AEAF0A56E1 /* ReminderBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderBubbleView.swift; sourceTree = "<group>"; };
+		A115E50257E4400685E92DEA /* ReminderSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderSchedule.swift; sourceTree = "<group>"; };
+		A8A3C6384A9041DBBA818AAB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AB1C2D3E4F5061728394A5B6 /* SettingsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStoreTests.swift; sourceTree = "<group>"; };
+		BC1D2E3F4A5B6C7D8E9F0011 /* ReminderEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderEngineTests.swift; sourceTree = "<group>"; };
+		BE8079BE6A294417A525181F /* ReminderEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderEngine.swift; sourceTree = "<group>"; };
+		C63AC8844F9E4439A37EAAD2 /* ReminderScheduleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderScheduleTests.swift; sourceTree = "<group>"; };
+		D5038EC23DDA43D4A5AFCD40 /* PetRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetRootView.swift; sourceTree = "<group>"; };
+		D963DAE1F1E94AC0B011B753 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		E5C4D02F8D9C4A9D8ACCB140 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		F1898853DDEA4C90B6017853 /* PetWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetWindowController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7B59B5973D7340D98434A4E5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		948167F1E57B474AADF462D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				58B705E2F8134478842ED287 /* XCTest.framework in Frameworks */,
+				C35BD982C677434A900E16AA /* libCatCompanionCore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D6F6FF30333449429B153868 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DE7BA4F978D47579684D92E /* AppKit.framework in Frameworks */,
+				C8A51486D0834AB5BFFB1FFF /* SwiftUI.framework in Frameworks */,
+				2C158CF2DBCD4C4CA2443940 /* UserNotifications.framework in Frameworks */,
+				E0382ADDB4C541E69C073BAD /* libCatCompanionCore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2D5FDD411EC14CA4AAFE093C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D963DAE1F1E94AC0B011B753 /* AppKit.framework */,
+				E5C4D02F8D9C4A9D8ACCB140 /* SwiftUI.framework */,
+				6360051B5F46446F87BB0858 /* UserNotifications.framework */,
+				4267D4B3DBF14C30A7D84FDF /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3687EC811FBA4699962E5B6A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6A4D91A0B0D146F8A1202002 /* AssistantChatView.swift */,
+				D5038EC23DDA43D4A5AFCD40 /* PetRootView.swift */,
+				4AFC7731205A44EBA3622623 /* PetView.swift */,
+				8B3A795D551C45AEAF0A56E1 /* ReminderBubbleView.swift */,
+				A8A3C6384A9041DBBA818AAB /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6BBD22C94E6440D4B2FEE210 /* CatCompanionApp */ = {
+			isa = PBXGroup;
+			children = (
+				05A27FF7B8B94E1EB8B2CFCD /* Info.plist */,
+				1890B5D5FF654E9A97345540 /* CatCompanionApp.entitlements */,
+				D1A7E7F90123456789ABC302 /* Assets.xcassets */,
+				D1A7E7F90123456789ABC202 /* InfoPlist.strings */,
+				D1A7E7F90123456789ABC201 /* Localizable.strings */,
+			);
+			path = CatCompanionApp;
+			sourceTree = "<group>";
+		};
+		93C153ED060C40ABBE6394FA /* Sources/CatCompanionApp */ = {
+			isa = PBXGroup;
+			children = (
+				6D0E5A4B9B8346569F83E34F /* AppDelegate.swift */,
+				36401C4A85EA4B16A93E3052 /* CatCompanionApp.swift */,
+				441DD2815B2F413DBC6C232E /* AppModel.swift */,
+				6A4D91A0B0D146F8A1202001 /* AssistantChatWindowController.swift */,
+				7B1DCCDABEC14F4B9C117002 /* AudioDeviceCatalog.swift */,
+				6A4D91A0B0D146F8A1202003 /* LocalSpeechRuntime.swift */,
+				48305471E9C04193BD549B55 /* NotificationManager.swift */,
+				F1898853DDEA4C90B6017853 /* PetWindowController.swift */,
+				3687EC811FBA4699962E5B6A /* Views */,
+			);
+			path = Sources/CatCompanionApp;
+			sourceTree = "<group>";
+		};
+		99AA13526B0840A3A16C0180 /* Tests/CatCompanionCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				C63AC8844F9E4439A37EAAD2 /* ReminderScheduleTests.swift */,
+				AB1C2D3E4F5061728394A5B6 /* SettingsStoreTests.swift */,
+				BC1D2E3F4A5B6C7D8E9F0011 /* ReminderEngineTests.swift */,
+			);
+			path = Tests/CatCompanionCoreTests;
+			sourceTree = "<group>";
+		};
+		C416B090B4784562ACE0FFCA = {
+			isa = PBXGroup;
+			children = (
+				E70817A56A89403EB9E15EF0 /* Sources */,
+				99AA13526B0840A3A16C0180 /* Tests/CatCompanionCoreTests */,
+				6BBD22C94E6440D4B2FEE210 /* CatCompanionApp */,
+				2D5FDD411EC14CA4AAFE093C /* Frameworks */,
+				E1274433714347F6B4B62184 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DA48204EDE56433D8BA52F06 /* Sources/CatCompanionCore */ = {
+			isa = PBXGroup;
+			children = (
+				254AD27E051C4A4386F8CE86 /* ReminderTypes.swift */,
+				A115E50257E4400685E92DEA /* ReminderSchedule.swift */,
+				4D098E15019C40E58020F177 /* SettingsStore.swift */,
+				BE8079BE6A294417A525181F /* ReminderEngine.swift */,
+			);
+			path = Sources/CatCompanionCore;
+			sourceTree = "<group>";
+		};
+		E1274433714347F6B4B62184 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8351634D881E44838E22BDBF /* CatCompanion.app */,
+				1988D046F70B42A1BFFC79B6 /* libCatCompanionCore.a */,
+				58446BBDBE36498D9E0B6C67 /* CatCompanionCoreTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E70817A56A89403EB9E15EF0 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				93C153ED060C40ABBE6394FA /* Sources/CatCompanionApp */,
+				DA48204EDE56433D8BA52F06 /* Sources/CatCompanionCore */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		17B5F873E9D4489485BCFD80 /* CatCompanionApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4D7711C07B164B0BBCE6FE0D /* Build configuration list for PBXNativeTarget "CatCompanionApp" */;
+			buildPhases = (
+				451AA9A1A1224B4C93AFF5DA /* Sources */,
+				D6F6FF30333449429B153868 /* Frameworks */,
+				5E843A7875A3452899268DC0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AC1F39D3EEA2410E9A600046 /* PBXTargetDependency */,
+			);
+			name = CatCompanionApp;
+			productName = CatCompanionApp;
+			productReference = 8351634D881E44838E22BDBF /* CatCompanion.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2BD24D3ADDA041E3A4B1604B /* CatCompanionCoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ECDD3D096B6443308FFD22AB /* Build configuration list for PBXNativeTarget "CatCompanionCoreTests" */;
+			buildPhases = (
+				C118381A0E544A2794BF58E1 /* Sources */,
+				948167F1E57B474AADF462D8 /* Frameworks */,
+				2533EEC85F1A45DA8B7A22B9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DAB1F9C0B6AE4382A803F7B1 /* PBXTargetDependency */,
+			);
+			name = CatCompanionCoreTests;
+			productName = CatCompanionCoreTests;
+			productReference = 58446BBDBE36498D9E0B6C67 /* CatCompanionCoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		5ACA217AE93B45C68F044A73 /* CatCompanionCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC130A92C9654F6FA1996A85 /* Build configuration list for PBXNativeTarget "CatCompanionCore" */;
+			buildPhases = (
+				312105AFEB0341A2A739CB96 /* Sources */,
+				7B59B5973D7340D98434A4E5 /* Frameworks */,
+				0C48960554554A6C93C954E2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CatCompanionCore;
+			productName = CatCompanionCore;
+			productReference = 1988D046F70B42A1BFFC79B6 /* libCatCompanionCore.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ECE4920C762540A1BF8D7AA8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 75DF8A7532F24C17AC62835B /* Build configuration list for PBXProject "CatCompanion" */;
+			compatibilityVersion = "Xcode 15.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				"zh-Hans",
+				"zh-Hant",
+				ja,
+			);
+			mainGroup = C416B090B4784562ACE0FFCA;
+			productRefGroup = E1274433714347F6B4B62184 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				17B5F873E9D4489485BCFD80 /* CatCompanionApp */,
+				5ACA217AE93B45C68F044A73 /* CatCompanionCore */,
+				2BD24D3ADDA041E3A4B1604B /* CatCompanionCoreTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0C48960554554A6C93C954E2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2533EEC85F1A45DA8B7A22B9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5E843A7875A3452899268DC0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1A7E7F90123456789ABC301 /* Assets.xcassets in Resources */,
+				D1A7E7F90123456789ABC001 /* Localizable.strings in Resources */,
+				D1A7E7F90123456789ABC002 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		312105AFEB0341A2A739CB96 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				871671D1AB484705A08A0508 /* ReminderTypes.swift in Sources */,
+				E02CDF6258D94274AF113A79 /* ReminderSchedule.swift in Sources */,
+				68F1561FCD654E90ACC60C57 /* SettingsStore.swift in Sources */,
+				78FB6D46ECF54B7682C37D31 /* ReminderEngine.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		451AA9A1A1224B4C93AFF5DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9D4BB3206404257B93EB4B5 /* AppDelegate.swift in Sources */,
+				893787303333440191D2FEE7 /* CatCompanionApp.swift in Sources */,
+				932062184BB54152AE755EB3 /* AppModel.swift in Sources */,
+				6A4D91A0B0D146F8A1201001 /* AssistantChatWindowController.swift in Sources */,
+				7B1DCCDABEC14F4B9C117001 /* AudioDeviceCatalog.swift in Sources */,
+				6A4D91A0B0D146F8A1201003 /* LocalSpeechRuntime.swift in Sources */,
+				870DEACD93D847ADABAAC56F /* NotificationManager.swift in Sources */,
+				0019B94FEA8A41969AB21BA0 /* PetWindowController.swift in Sources */,
+				6A4D91A0B0D146F8A1201002 /* AssistantChatView.swift in Sources */,
+				E81FC46F842F4AA0B70A36C3 /* PetRootView.swift in Sources */,
+				49F8208784D046BEB6E97464 /* PetView.swift in Sources */,
+				9EC5D5CCA0254263AD9B5DA5 /* ReminderBubbleView.swift in Sources */,
+				EDEFBE93CAA74F8AB022F1B9 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C118381A0E544A2794BF58E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FB80D9C8F474D8BA44C3B11 /* ReminderScheduleTests.swift in Sources */,
+				AB1C2D3E4F5061728394A5B7 /* SettingsStoreTests.swift in Sources */,
+				BC1D2E3F4A5B6C7D8E9F0012 /* ReminderEngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AC1F39D3EEA2410E9A600046 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5ACA217AE93B45C68F044A73 /* CatCompanionCore */;
+			targetProxy = C1B3ABF9BEE64BA091A039FB /* PBXContainerItemProxy */;
+		};
+		DAB1F9C0B6AE4382A803F7B1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5ACA217AE93B45C68F044A73 /* CatCompanionCore */;
+			targetProxy = 4232AE2F38FB4563939AE709 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D1A7E7F90123456789ABC201 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D1A7E7F90123456789ABC101 /* en */,
+				D1A7E7F90123456789ABC102 /* ja */,
+				D1A7E7F90123456789ABC103 /* zh-Hans */,
+				D1A7E7F90123456789ABC104 /* zh-Hant */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		D1A7E7F90123456789ABC202 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D1A7E7F90123456789ABC111 /* en */,
+				D1A7E7F90123456789ABC112 /* ja */,
+				D1A7E7F90123456789ABC113 /* zh-Hans */,
+				D1A7E7F90123456789ABC114 /* zh-Hant */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		29181108369F4CC89998B716 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CatCompanionApp/CatCompanionApp.entitlements;
+				DEVELOPMENT_TEAM = 36Y27GF757;
+				INFOPLIST_FILE = CatCompanionApp/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hakimi.catcompanion;
+				PRODUCT_NAME = CatCompanion;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		29DAD953F586463EBF9B82C7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		5811EBB759D94AE19EC4302F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hakimi.catcompanion.core;
+				PRODUCT_NAME = CatCompanionCore;
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		6A2EB4E98D884E8D9AC3F4A0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				ENABLE_TESTABILITY = YES;
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hakimi.catcompanion.core;
+				PRODUCT_NAME = CatCompanionCore;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		9DA77591AAA041DC9A8309EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hakimi.catcompanion.tests;
+				PRODUCT_NAME = CatCompanionCoreTests;
+				SWIFT_INCLUDE_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		C8736735B95143169B120C86 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CatCompanionApp/CatCompanionApp.entitlements;
+				DEVELOPMENT_TEAM = 36Y27GF757;
+				INFOPLIST_FILE = CatCompanionApp/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hakimi.catcompanion;
+				PRODUCT_NAME = CatCompanion;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		CDC90057D364F218009C853 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		D7D642DA6C5843BC8CEC32C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hakimi.catcompanion.tests;
+				PRODUCT_NAME = CatCompanionCoreTests;
+				SWIFT_INCLUDE_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4D7711C07B164B0BBCE6FE0D /* Build configuration list for PBXNativeTarget "CatCompanionApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C8736735B95143169B120C86 /* Debug */,
+				29181108369F4CC89998B716 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		75DF8A7532F24C17AC62835B /* Build configuration list for PBXProject "CatCompanion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				29DAD953F586463EBF9B82C7 /* Debug */,
+				CDC90057D364F218009C853 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EC130A92C9654F6FA1996A85 /* Build configuration list for PBXNativeTarget "CatCompanionCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A2EB4E98D884E8D9AC3F4A0 /* Debug */,
+				5811EBB759D94AE19EC4302F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ECDD3D096B6443308FFD22AB /* Build configuration list for PBXNativeTarget "CatCompanionCoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D7D642DA6C5843BC8CEC32C8 /* Debug */,
+				9DA77591AAA041DC9A8309EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ECE4920C762540A1BF8D7AA8 /* Project object */;
+}

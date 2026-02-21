@@ -1,0 +1,3 @@
+"CFBundleDisplayName" = "Cat Companion";
+"CFBundleName" = "Cat Companion";
+"NSMicrophoneUsageDescription" = "Microphone access is required for voice input.";
