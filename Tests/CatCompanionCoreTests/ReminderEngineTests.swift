@@ -390,6 +390,81 @@ final class ReminderEngineTests: XCTestCase {
         XCTAssertEqual(engine.activeReminder, .stand)
     }
 
+    // MARK: - nextReminderInfo
+
+    func testNextReminderInfoReturnsNilWhenPaused() {
+        let (store, defaults, suiteName) = makeStore()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        configureSingleHydratePlan(on: store, interval: 30)
+
+        let now = Date(timeIntervalSince1970: 11_000_000)
+        var settings = store.settings
+        settings.remindersPaused = true
+        settings.states[.hydrate] = ReminderState(
+            lastCompletedAt: now,
+            lastTriggeredAt: nil,
+            snoozedUntil: nil
+        )
+        store.settings = settings
+
+        let engine = ReminderEngine(settingsStore: store, nowProvider: { now })
+        XCTAssertNil(engine.nextReminderInfo())
+    }
+
+    func testNextReminderInfoReturnsNearestEnabledReminder() {
+        let (store, defaults, suiteName) = makeStore()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        configureHydrateAndStandPlans(on: store, interval: 30, hydrateSnooze: 5, standSnooze: 10)
+
+        let baseNow = Date(timeIntervalSince1970: 12_000_000)
+
+        // Hydrate completed 10 min ago → due in 20 min
+        // Stand completed 5 min ago  → due in 25 min
+        var settings = store.settings
+        settings.states[.hydrate] = ReminderState(
+            lastCompletedAt: baseNow.addingTimeInterval(-10 * 60),
+            lastTriggeredAt: nil,
+            snoozedUntil: nil
+        )
+        settings.states[.stand] = ReminderState(
+            lastCompletedAt: baseNow.addingTimeInterval(-5 * 60),
+            lastTriggeredAt: nil,
+            snoozedUntil: nil
+        )
+        store.settings = settings
+
+        let engine = ReminderEngine(settingsStore: store, nowProvider: { baseNow })
+        let info = engine.nextReminderInfo()
+        XCTAssertNotNil(info)
+        XCTAssertEqual(info?.type, .hydrate)
+    }
+
+    func testNextReminderInfoReturnsNilWhenAllDisabled() {
+        let (store, defaults, suiteName) = makeStore()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let now = Date(timeIntervalSince1970: 13_000_000)
+
+        // Disable all reminders
+        var settings = store.settings
+        for type in ReminderType.allCases {
+            var plan = settings.plans[type] ?? ReminderPlan(
+                enabled: true,
+                intervalMinutes: type.defaultIntervalMinutes,
+                quietHours: QuietHours(),
+                snoozeMinutes: type.defaultSnoozeMinutes
+            )
+            plan.enabled = false
+            settings.plans[type] = plan
+        }
+        store.settings = settings
+
+        let engine = ReminderEngine(settingsStore: store, nowProvider: { now })
+        XCTAssertNil(engine.nextReminderInfo())
+    }
+
     func testDisablingCooldownDuringWindowAllowsImmediateTrigger() {
         let (store, defaults, suiteName) = makeStore()
         defer { defaults.removePersistentDomain(forName: suiteName) }
