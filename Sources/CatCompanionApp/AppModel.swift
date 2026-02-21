@@ -1029,21 +1029,92 @@ final class DiagnosticsGuideWindowController {
 
 private struct DiagnosticsGuideView: View {
     @ObservedObject var appModel: AppModel
+    @State private var currentPhase: Int = 0
+
+    private var basicChecks: [StartupDiagnosticCheck] {
+        appModel.diagnosticsChecks.filter {
+            ["helper", "gateway", "microphone"].contains($0.id)
+        }
+    }
+
+    private var advancedChecks: [StartupDiagnosticCheck] {
+        appModel.diagnosticsChecks.filter {
+            !["helper", "gateway", "microphone"].contains($0.id)
+        }
+    }
 
     var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Header
+            VStack(alignment: .leading, spacing: 4) {
+                Text(AppStrings.text(.diagnosticsGuideTitle))
+                    .font(.title2)
+                    .fontWeight(.bold)
+                Text(AppStrings.text(.diagnosticsGuideSubtitle))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.bottom, 16)
+
+            // Phase indicator
+            HStack(spacing: 12) {
+                DiagnosticsPhaseTab(
+                    title: AppStrings.text(.diagnosticsGuidePhaseBasicTitle),
+                    index: 0,
+                    currentPhase: currentPhase,
+                    action: { currentPhase = 0 }
+                )
+                DiagnosticsPhaseTab(
+                    title: AppStrings.text(.diagnosticsGuidePhaseAdvancedTitle),
+                    index: 1,
+                    currentPhase: currentPhase,
+                    action: { currentPhase = 1 }
+                )
+            }
+            .padding(.bottom, 12)
+
+            Divider()
+                .padding(.bottom, 12)
+
+            // Phase content
+            if currentPhase == 0 {
+                phaseBasicContent
+            } else {
+                phaseAdvancedContent
+            }
+
+            Spacer(minLength: 8)
+
+            Divider()
+                .padding(.vertical, 8)
+
+            // Bottom navigation
+            bottomBar
+        }
+        .padding(20)
+        .frame(minWidth: 580, minHeight: 520)
+    }
+
+    // MARK: - Phase 1: Basic Setup
+
+    private var phaseBasicContent: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(AppStrings.text(.diagnosticsGuideTitle))
-                .font(.title3)
-                .fontWeight(.semibold)
-            Text(AppStrings.text(.diagnosticsGuideSubtitle))
-                .font(.subheadline)
+            Text(AppStrings.text(.diagnosticsGuidePhaseBasicSubtitle))
+                .font(.callout)
                 .foregroundStyle(.secondary)
 
             DiagnosticsQuickStartCard(
-                isRunningDiagnostics: appModel.isRunningDiagnostics,
-                onRunChecks: { appModel.runDiagnostics() },
                 onOpenSettings: { appModel.openSettingsWindow() }
             )
+
+            if !basicChecks.isEmpty {
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(basicChecks) { check in
+                        DiagnosticsCheckRow(check: check)
+                    }
+                }
+                .padding(.top, 4)
+            }
 
             if appModel.isRunningDiagnostics {
                 Text(AppStrings.text(.diagnosticsGuideChecking))
@@ -1054,38 +1125,89 @@ private struct DiagnosticsGuideView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
+        }
+    }
 
-            Divider()
+    // MARK: - Phase 2: Advanced Features
+
+    private var phaseAdvancedContent: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(AppStrings.text(.diagnosticsGuidePhaseAdvancedSubtitle))
+                .font(.callout)
+                .foregroundStyle(.secondary)
+
+            // Skip hint
+            HStack(spacing: 6) {
+                Image(systemName: "info.circle")
+                    .foregroundStyle(.blue)
+                    .font(.caption)
+                Text(AppStrings.text(.diagnosticsGuidePhaseAdvancedSkipHint))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(8)
+            .background(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(Color.blue.opacity(0.06))
+            )
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    ForEach(appModel.diagnosticsChecks) { check in
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(advancedChecks) { check in
                         DiagnosticsCheckRow(check: check)
                     }
                 }
             }
 
-            Divider()
+            if appModel.isRunningDiagnostics {
+                Text(AppStrings.text(.diagnosticsGuideChecking))
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
 
-            HStack {
-                Button(AppStrings.text(.diagnosticsGuideRunAgain)) {
-                    appModel.runDiagnostics()
+    // MARK: - Bottom Bar
+
+    private var bottomBar: some View {
+        HStack {
+            if currentPhase == 1 {
+                Button(AppStrings.text(.diagnosticsGuidePreviousStep)) {
+                    currentPhase = 0
                 }
-                .disabled(appModel.isRunningDiagnostics)
+            }
 
-                Button(AppStrings.text(.diagnosticsGuideOpenSettings)) {
-                    appModel.openSettingsWindow()
+            Button(AppStrings.text(.diagnosticsGuideRunAgain)) {
+                appModel.runDiagnostics()
+            }
+            .disabled(appModel.isRunningDiagnostics)
+
+            Button(AppStrings.text(.diagnosticsGuideOpenSettings)) {
+                appModel.openSettingsWindow()
+            }
+
+            Spacer()
+
+            if currentPhase == 0 {
+                Button(AppStrings.text(.diagnosticsGuideSkip)) {
+                    appModel.completeDiagnosticsGuide()
                 }
 
-                Spacer()
+                Button(AppStrings.text(.diagnosticsGuideNextStep)) {
+                    currentPhase = 1
+                }
+                .buttonStyle(.borderedProminent)
+            } else {
+                Button(AppStrings.text(.diagnosticsGuideSkip)) {
+                    appModel.completeDiagnosticsGuide()
+                }
 
                 Button(AppStrings.text(.diagnosticsGuideDone)) {
                     appModel.completeDiagnosticsGuide()
                 }
+                .buttonStyle(.borderedProminent)
             }
         }
-        .padding(16)
-        .frame(minWidth: 580, minHeight: 520)
     }
 
     private static let dateFormatter: DateFormatter = {
@@ -1096,9 +1218,34 @@ private struct DiagnosticsGuideView: View {
     }()
 }
 
+// MARK: - Phase Tab
+
+private struct DiagnosticsPhaseTab: View {
+    let title: String
+    let index: Int
+    let currentPhase: Int
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(index == currentPhase ? .semibold : .regular)
+                .foregroundStyle(index == currentPhase ? .primary : .secondary)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(index == currentPhase ? Color.accentColor.opacity(0.12) : Color.clear)
+                )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Quick Start Card
+
 private struct DiagnosticsQuickStartCard: View {
-    let isRunningDiagnostics: Bool
-    let onRunChecks: () -> Void
     let onOpenSettings: () -> Void
 
     var body: some View {
@@ -1118,15 +1265,14 @@ private struct DiagnosticsQuickStartCard: View {
                 step: 2,
                 title: AppStrings.text(.diagnosticsQuickStartGatewayTitle),
                 detail: AppStrings.text(.diagnosticsQuickStartGatewayDetail),
-                actionTitle: AppStrings.text(.diagnosticsGuideRunAgain),
-                action: onRunChecks,
-                actionDisabled: isRunningDiagnostics
+                actionTitle: AppStrings.text(.diagnosticsGuideOpenSettings),
+                action: onOpenSettings
             )
 
             DiagnosticsQuickStartRow(
                 step: 3,
-                title: AppStrings.text(.diagnosticsQuickStartPetModeTitle),
-                detail: AppStrings.text(.diagnosticsQuickStartPetModeDetail),
+                title: AppStrings.text(.diagnosticsQuickStartDisplayTitle),
+                detail: AppStrings.text(.diagnosticsQuickStartDisplayDetail),
                 actionTitle: AppStrings.text(.diagnosticsGuideOpenSettings),
                 action: onOpenSettings
             )
@@ -1138,6 +1284,8 @@ private struct DiagnosticsQuickStartCard: View {
         )
     }
 }
+
+// MARK: - Quick Start Row
 
 private struct DiagnosticsQuickStartRow: View {
     let step: Int
@@ -1176,6 +1324,8 @@ private struct DiagnosticsQuickStartRow: View {
         }
     }
 }
+
+// MARK: - Check Row
 
 private struct DiagnosticsCheckRow: View {
     let check: StartupDiagnosticCheck

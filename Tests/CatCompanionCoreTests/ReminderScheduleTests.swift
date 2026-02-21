@@ -138,10 +138,10 @@ final class ReminderScheduleTests: XCTestCase {
     }
 
     func testLocalizedDiagnosticsQuickStartTitleForFourLanguages() {
-        XCTAssertEqual(AppStrings.text(.diagnosticsQuickStartTitle, language: .zhHans), "快速上手（3 步）")
-        XCTAssertEqual(AppStrings.text(.diagnosticsQuickStartTitle, language: .zhHant), "快速上手（3 步）")
-        XCTAssertEqual(AppStrings.text(.diagnosticsQuickStartTitle, language: .en), "Quick Start (3 Steps)")
-        XCTAssertEqual(AppStrings.text(.diagnosticsQuickStartTitle, language: .ja), "クイックスタート（3 ステップ）")
+        XCTAssertEqual(AppStrings.text(.diagnosticsQuickStartTitle, language: .zhHans), "快速上手")
+        XCTAssertEqual(AppStrings.text(.diagnosticsQuickStartTitle, language: .zhHant), "快速上手")
+        XCTAssertEqual(AppStrings.text(.diagnosticsQuickStartTitle, language: .en), "Quick Start")
+        XCTAssertEqual(AppStrings.text(.diagnosticsQuickStartTitle, language: .ja), "クイックスタート")
     }
 
     func testLocalizedPauseReminderLabelsForFourLanguages() {
@@ -220,10 +220,10 @@ final class ReminderScheduleTests: XCTestCase {
         XCTAssertEqual(AppStrings.text(.menuDiagnostics, language: .en), "Environment Diagnostics…")
         XCTAssertEqual(AppStrings.text(.menuDiagnostics, language: .ja), "環境診断…")
 
-        XCTAssertEqual(AppStrings.text(.diagnosticsGuideTitle, language: .zhHans), "首次运行诊断")
-        XCTAssertEqual(AppStrings.text(.diagnosticsGuideTitle, language: .zhHant), "首次執行診斷")
-        XCTAssertEqual(AppStrings.text(.diagnosticsGuideTitle, language: .en), "First-Run Diagnostics")
-        XCTAssertEqual(AppStrings.text(.diagnosticsGuideTitle, language: .ja), "初回起動診断")
+        XCTAssertEqual(AppStrings.text(.diagnosticsGuideTitle, language: .zhHans), "欢迎使用猫咪伴侣")
+        XCTAssertEqual(AppStrings.text(.diagnosticsGuideTitle, language: .zhHant), "歡迎使用貓咪伴侶")
+        XCTAssertEqual(AppStrings.text(.diagnosticsGuideTitle, language: .en), "Welcome to Cat Companion")
+        XCTAssertEqual(AppStrings.text(.diagnosticsGuideTitle, language: .ja), "Cat Companion へようこそ")
 
         XCTAssertEqual(AppStrings.text(.diagnosticsDetailConnectionFailed, language: .zhHans), "连接失败")
         XCTAssertEqual(AppStrings.text(.diagnosticsDetailConnectionFailed, language: .zhHant), "連線失敗")
