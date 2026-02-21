@@ -86,6 +86,17 @@ final class AppModel: ObservableObject {
         assistantChatWindowController.show()
     }
 
+    func snoozeActiveReminderWith(minutes: Int) {
+        guard let type = reminderEngine.activeReminder else { return }
+        let now = Date()
+        var settings = settingsStore.settings
+        var state = settings.states[type] ?? ReminderState()
+        state.snoozedUntil = Calendar.current.date(byAdding: .minute, value: minutes, to: now)
+        settings.states[type] = state
+        settingsStore.settings = settings
+        reminderEngine.dismissActiveReminder()
+    }
+
     func showDiagnosticsGuide() {
         RuntimeAutomationLog.record("diagnostics_open")
         diagnosticsGuideWindowController.show()

@@ -290,6 +290,12 @@ public enum AppStringKey: String {
     case menuHidePet
     case menuSystemNotification
     case menuPauseReminders
+    case menuResumeReminders
+    case menuRemindersPaused
+    case menuNextReminder
+    case menuSnooze5Min
+    case menuSnooze10Min
+    case menuSnooze30Min
     case menuAssistantEnabled
     case menuAssistantChat
     case menuDiagnostics
@@ -541,6 +547,12 @@ public enum AppStrings {
         .menuHidePet: "隐藏助手",
         .menuSystemNotification: "系统通知",
         .menuPauseReminders: "暂停提醒",
+        .menuResumeReminders: "恢复提醒",
+        .menuRemindersPaused: "提醒已暂停",
+        .menuNextReminder: "下次提醒",
+        .menuSnooze5Min: "5 分钟后再提醒",
+        .menuSnooze10Min: "10 分钟后再提醒",
+        .menuSnooze30Min: "30 分钟后再提醒",
         .menuAssistantEnabled: "AI 助理",
         .menuAssistantChat: "打开 AI 对话",
         .menuDiagnostics: "环境诊断…",
@@ -712,6 +724,12 @@ public enum AppStrings {
         .menuHidePet: "隱藏助理",
         .menuSystemNotification: "系統通知",
         .menuPauseReminders: "暫停提醒",
+        .menuResumeReminders: "恢復提醒",
+        .menuRemindersPaused: "提醒已暫停",
+        .menuNextReminder: "下次提醒",
+        .menuSnooze5Min: "5 分鐘後再提醒",
+        .menuSnooze10Min: "10 分鐘後再提醒",
+        .menuSnooze30Min: "30 分鐘後再提醒",
         .menuAssistantEnabled: "AI 助理",
         .menuAssistantChat: "開啟 AI 對話",
         .menuDiagnostics: "環境診斷…",
@@ -883,6 +901,12 @@ public enum AppStrings {
         .menuHidePet: "Hide Assistant",
         .menuSystemNotification: "System Notifications",
         .menuPauseReminders: "Pause Reminders",
+        .menuResumeReminders: "Resume Reminders",
+        .menuRemindersPaused: "Reminders Paused",
+        .menuNextReminder: "Next Reminder",
+        .menuSnooze5Min: "Remind in 5 min",
+        .menuSnooze10Min: "Remind in 10 min",
+        .menuSnooze30Min: "Remind in 30 min",
         .menuAssistantEnabled: "AI Assistant",
         .menuAssistantChat: "Open AI Chat",
         .menuDiagnostics: "Environment Diagnostics…",
@@ -1054,6 +1078,12 @@ public enum AppStrings {
         .menuHidePet: "アシスタントを隠す",
         .menuSystemNotification: "システム通知",
         .menuPauseReminders: "リマインダーを一時停止",
+        .menuResumeReminders: "リマインダーを再開",
+        .menuRemindersPaused: "リマインダーは一時停止中",
+        .menuNextReminder: "次のリマインダー",
+        .menuSnooze5Min: "5 分後に再通知",
+        .menuSnooze10Min: "10 分後に再通知",
+        .menuSnooze30Min: "30 分後に再通知",
         .menuAssistantEnabled: "AI アシスタント",
         .menuAssistantChat: "AI 会話を開く",
         .menuDiagnostics: "環境診断…",
