@@ -239,7 +239,13 @@ public struct AssistantSettings: Codable, Equatable {
         cloudPrimaryModel = try container.decodeIfPresent(String.self, forKey: .cloudPrimaryModel) ?? defaults.cloudPrimaryModel
         localFallbackModel = try container.decodeIfPresent(String.self, forKey: .localFallbackModel) ?? defaults.localFallbackModel
         gatewayURL = try container.decodeIfPresent(String.self, forKey: .gatewayURL) ?? defaults.gatewayURL
-        gatewayToken = try container.decodeIfPresent(String.self, forKey: .gatewayToken) ?? defaults.gatewayToken
+        // gatewayToken: prefer Keychain; fall back to legacy JSON value for migration
+        let legacyToken = try container.decodeIfPresent(String.self, forKey: .gatewayToken)
+        gatewayToken = KeychainHelper.load(forKey: "gatewayToken") ?? legacyToken ?? defaults.gatewayToken
+        // Migrate legacy token to Keychain if present
+        if let legacy = legacyToken, !legacy.isEmpty, KeychainHelper.load(forKey: "gatewayToken") == nil {
+            KeychainHelper.save(legacy, forKey: "gatewayToken")
+        }
         gatewaySessionKey = try container.decodeIfPresent(String.self, forKey: .gatewaySessionKey) ?? defaults.gatewaySessionKey
         actionScope = try container.decodeIfPresent(AssistantActionScope.self, forKey: .actionScope) ?? defaults.actionScope
         skillPolicy = try container.decodeIfPresent(AssistantSkillPolicy.self, forKey: .skillPolicy) ?? defaults.skillPolicy
@@ -254,7 +260,7 @@ public struct AssistantSettings: Codable, Equatable {
         try container.encode(cloudPrimaryModel, forKey: .cloudPrimaryModel)
         try container.encode(localFallbackModel, forKey: .localFallbackModel)
         try container.encode(gatewayURL, forKey: .gatewayURL)
-        try container.encode(gatewayToken, forKey: .gatewayToken)
+        // gatewayToken is stored in Keychain, not serialized to JSON
         try container.encode(gatewaySessionKey, forKey: .gatewaySessionKey)
         try container.encode(actionScope, forKey: .actionScope)
         try container.encode(skillPolicy, forKey: .skillPolicy)

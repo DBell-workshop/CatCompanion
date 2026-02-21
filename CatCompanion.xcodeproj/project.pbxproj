@@ -23,6 +23,7 @@
 		49F8208784D046BEB6E97464 /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFC7731205A44EBA3622623 /* PetView.swift */; };
 		58B705E2F8134478842ED287 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4267D4B3DBF14C30A7D84FDF /* XCTest.framework */; };
 		68F1561FCD654E90ACC60C57 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D098E15019C40E58020F177 /* SettingsStore.swift */; };
+		KC01A0B1C2D3E4F5A6B7C8D9 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = KC02A0B1C2D3E4F5A6B7C8D9 /* KeychainHelper.swift */; };
 		78FB6D46ECF54B7682C37D31 /* ReminderEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8079BE6A294417A525181F /* ReminderEngine.swift */; };
 		870DEACD93D847ADABAAC56F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48305471E9C04193BD549B55 /* NotificationManager.swift */; };
 		871671D1AB484705A08A0508 /* ReminderTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254AD27E051C4A4386F8CE86 /* ReminderTypes.swift */; };
@@ -75,6 +76,7 @@
 		48305471E9C04193BD549B55 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		4AFC7731205A44EBA3622623 /* PetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetView.swift; sourceTree = "<group>"; };
 		4D098E15019C40E58020F177 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+		KC02A0B1C2D3E4F5A6B7C8D9 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		6A4D91A0B0D146F8A1202001 /* AssistantChatWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantChatWindowController.swift; sourceTree = "<group>"; };
 		6A4D91A0B0D146F8A1202002 /* AssistantChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantChatView.swift; sourceTree = "<group>"; };
 		6A4D91A0B0D146F8A1202003 /* LocalSpeechRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSpeechRuntime.swift; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 				254AD27E051C4A4386F8CE86 /* ReminderTypes.swift */,
 				A115E50257E4400685E92DEA /* ReminderSchedule.swift */,
 				4D098E15019C40E58020F177 /* SettingsStore.swift */,
+				KC02A0B1C2D3E4F5A6B7C8D9 /* KeychainHelper.swift */,
 				BE8079BE6A294417A525181F /* ReminderEngine.swift */,
 			);
 			path = Sources/CatCompanionCore;
@@ -351,6 +354,7 @@
 				871671D1AB484705A08A0508 /* ReminderTypes.swift in Sources */,
 				E02CDF6258D94274AF113A79 /* ReminderSchedule.swift in Sources */,
 				68F1561FCD654E90ACC60C57 /* SettingsStore.swift in Sources */,
+				KC01A0B1C2D3E4F5A6B7C8D9 /* KeychainHelper.swift in Sources */,
 				78FB6D46ECF54B7682C37D31 /* ReminderEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

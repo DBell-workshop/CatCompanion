@@ -22,6 +22,7 @@ public final class SettingsStore: ObservableObject {
     }
 
     public func reset() {
+        KeychainHelper.delete(forKey: "gatewayToken")
         settings = AppSettings.defaults()
     }
 
@@ -29,10 +30,21 @@ public final class SettingsStore: ObservableObject {
         guard let data = defaults.data(forKey: storageKey) else { return nil }
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
-        return try? decoder.decode(AppSettings.self, from: data)
+        guard var loaded = try? decoder.decode(AppSettings.self, from: data) else { return nil }
+        // Ensure token is loaded from Keychain (decoder handles migration)
+        loaded.assistant.gatewayToken = KeychainHelper.load(forKey: "gatewayToken") ?? loaded.assistant.gatewayToken
+        return loaded
     }
 
     private func save(_ settings: AppSettings) {
+        // Persist token to Keychain separately
+        let token = settings.assistant.gatewayToken
+        if token.isEmpty {
+            KeychainHelper.delete(forKey: "gatewayToken")
+        } else {
+            KeychainHelper.save(token, forKey: "gatewayToken")
+        }
+
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         encoder.dateEncodingStrategy = .iso8601

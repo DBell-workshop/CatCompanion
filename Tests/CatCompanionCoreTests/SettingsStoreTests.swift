@@ -10,6 +10,7 @@ final class SettingsStoreTests: XCTestCase {
         }
         defer {
             defaults.removePersistentDomain(forName: suiteName)
+            KeychainHelper.delete(forKey: "gatewayToken")
         }
 
         let store = SettingsStore(userDefaults: defaults)
@@ -55,6 +56,9 @@ final class SettingsStoreTests: XCTestCase {
         XCTAssertEqual(reloaded.settings.assistant.voiceSettings.voiceInputDeviceUID, "test-input-device")
         XCTAssertEqual(reloaded.settings.assistant.voiceSettings.voiceOutputDeviceUID, "test-output-device")
         XCTAssertFalse(reloaded.settings.assistant.skillPolicy.thirdPartySkillsEnabled)
+
+        // Verify token is stored in Keychain, not in UserDefaults JSON
+        XCTAssertEqual(KeychainHelper.load(forKey: "gatewayToken"), "test-token")
     }
 
     func testResetRestoresDefaultSettings() {
@@ -65,6 +69,7 @@ final class SettingsStoreTests: XCTestCase {
         }
         defer {
             defaults.removePersistentDomain(forName: suiteName)
+            KeychainHelper.delete(forKey: "gatewayToken")
         }
 
         let store = SettingsStore(userDefaults: defaults)
@@ -257,6 +262,48 @@ final class SettingsStoreTests: XCTestCase {
         XCTAssertEqual(store.settings.assistant.gatewayToken, AppSettings.defaults().assistant.gatewayToken)
         XCTAssertEqual(store.settings.assistant.gatewaySessionKey, AppSettings.defaults().assistant.gatewaySessionKey)
         XCTAssertEqual(store.settings.assistant.voiceSettings, AppSettings.defaults().assistant.voiceSettings)
+    }
+
+    func testMigratesLegacyGatewayTokenToKeychain() throws {
+        let suiteName = "CatCompanion.SettingsStoreTests.\(UUID().uuidString)"
+        guard let defaults = UserDefaults(suiteName: suiteName) else {
+            XCTFail("Failed to create isolated UserDefaults suite")
+            return
+        }
+        defer {
+            defaults.removePersistentDomain(forName: suiteName)
+            KeychainHelper.delete(forKey: "gatewayToken")
+        }
+
+        // Ensure Keychain is clean before test
+        KeychainHelper.delete(forKey: "gatewayToken")
+
+        // Build a legacy JSON payload that still contains gatewayToken inline
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        encoder.dateEncodingStrategy = .iso8601
+
+        var legacySettings = AppSettings.defaults()
+        legacySettings.assistant.gatewayToken = "legacy-secret-token"
+
+        // Manually encode with token included (simulating old format)
+        let fullData = try encoder.encode(legacySettings)
+        guard var rootObject = try JSONSerialization.jsonObject(with: fullData) as? [String: Any] else {
+            XCTFail("Failed to decode settings JSON")
+            return
+        }
+        // Re-inject token into assistant JSON (old format stored it here)
+        if var assistant = rootObject["assistant"] as? [String: Any] {
+            assistant["gatewayToken"] = "legacy-secret-token"
+            rootObject["assistant"] = assistant
+        }
+        let legacyData = try JSONSerialization.data(withJSONObject: rootObject, options: [.prettyPrinted, .sortedKeys])
+        defaults.set(legacyData, forKey: "CatCompanion.Settings")
+
+        // Load should migrate the token to Keychain
+        let store = SettingsStore(userDefaults: defaults)
+        XCTAssertEqual(store.settings.assistant.gatewayToken, "legacy-secret-token")
+        XCTAssertEqual(KeychainHelper.load(forKey: "gatewayToken"), "legacy-secret-token")
     }
 
     func testLoadsLegacyVoiceSettingsWithoutWhisperFields() throws {
