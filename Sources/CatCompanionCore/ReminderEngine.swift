@@ -45,6 +45,22 @@ public final class ReminderEngine: ObservableObject {
         tick(at: nowProvider())
     }
 
+    /// Returns the nearest upcoming reminder type and its due date, or nil if paused/none scheduled.
+    public func nextReminderInfo() -> (type: ReminderType, due: Date)? {
+        let now = nowProvider()
+        guard !settingsStore.settings.remindersPaused else { return nil }
+        var nearest: (type: ReminderType, due: Date)?
+        for type in ReminderType.allCases {
+            guard let plan = settingsStore.settings.plans[type], plan.enabled else { continue }
+            let state = settingsStore.settings.states[type] ?? ReminderState()
+            guard let due = ReminderSchedule.nextDueDate(for: type, plan: plan, state: state, now: now) else { continue }
+            if nearest == nil || due < nearest!.due {
+                nearest = (type, due)
+            }
+        }
+        return nearest
+    }
+
     public func completeActiveReminder() {
         guard let type = activeReminder else { return }
         completeReminder(type)

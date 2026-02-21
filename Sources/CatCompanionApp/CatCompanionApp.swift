@@ -234,26 +234,65 @@ private struct MenuContentView: View {
 
     var body: some View {
         Group {
+            // ── Assistant ──
             Button(model.petVisible ? AppStrings.text(.menuHidePet) : AppStrings.text(.menuShowPet)) {
                 model.togglePetVisibility()
             }
 
+            Button(AppStrings.text(.menuAssistantChat)) {
+                model.showAssistantChat()
+            }
+            .disabled(!model.settingsStore.settings.assistant.enabled)
+
             Divider()
 
-            Menu(AppStrings.text(.settingsReminderSection)) {
-                ForEach(ReminderType.allCases) { type in
-                    Toggle(type.displayName, isOn: planBinding(for: type).enabled)
+            // ── Reminders ──
+            if model.settingsStore.settings.remindersPaused {
+                Text(AppStrings.text(.menuRemindersPaused))
+                Button(AppStrings.text(.menuResumeReminders)) {
+                    var settings = model.settingsStore.settings
+                    settings.remindersPaused = false
+                    model.settingsStore.settings = settings
                 }
-                Divider()
-                Toggle(AppStrings.text(.menuPauseReminders), isOn: remindersPausedBinding())
+            } else {
+                nextReminderRow
+
+                Menu(AppStrings.text(.settingsReminderSection)) {
+                    ForEach(ReminderType.allCases) { type in
+                        Toggle(type.displayName, isOn: planBinding(for: type).enabled)
+                    }
+                    Divider()
+                    Button(AppStrings.text(.menuPauseReminders)) {
+                        var settings = model.settingsStore.settings
+                        settings.remindersPaused = true
+                        model.settingsStore.settings = settings
+                    }
+                }
             }
 
+            // ── Active reminder snooze ──
+            if model.reminderEngine.activeReminder != nil {
+                Menu(AppStrings.text(.actionSnooze)) {
+                    Button(AppStrings.text(.menuSnooze5Min)) {
+                        model.snoozeActiveReminderWith(minutes: 5)
+                    }
+                    Button(AppStrings.text(.menuSnooze10Min)) {
+                        model.snoozeActiveReminderWith(minutes: 10)
+                    }
+                    Button(AppStrings.text(.menuSnooze30Min)) {
+                        model.snoozeActiveReminderWith(minutes: 30)
+                    }
+                }
+                Button(AppStrings.text(.actionComplete)) {
+                    model.reminderEngine.completeActiveReminder()
+                }
+            }
+
+            Divider()
+
+            // ── AI & Settings ──
             Menu(AppStrings.text(.settingsAssistantSection)) {
                 Toggle(AppStrings.text(.menuAssistantEnabled), isOn: assistantEnabledBinding())
-                Button(AppStrings.text(.menuAssistantChat)) {
-                    model.showAssistantChat()
-                }
-                .disabled(!model.settingsStore.settings.assistant.enabled)
                 Divider()
                 Button(AppStrings.text(.menuDiagnostics)) {
                     model.showDiagnosticsGuide()
@@ -273,6 +312,14 @@ private struct MenuContentView: View {
             Button(AppStrings.text(.menuQuit)) {
                 NSApplication.shared.terminate(nil)
             }
+        }
+    }
+
+    @ViewBuilder
+    private var nextReminderRow: some View {
+        if let info = model.reminderEngine.nextReminderInfo() {
+            let minutes = max(0, Int(info.due.timeIntervalSinceNow / 60))
+            Text("\(AppStrings.text(.menuNextReminder)): \(info.type.displayName) (\(AppStrings.minutesText(minutes)))")
         }
     }
 
@@ -300,17 +347,6 @@ private struct MenuContentView: View {
             set: { newValue in
                 var settings = model.settingsStore.settings
                 settings.notificationsEnabled = newValue
-                model.settingsStore.settings = settings
-            }
-        )
-    }
-
-    private func remindersPausedBinding() -> Binding<Bool> {
-        Binding(
-            get: { model.settingsStore.settings.remindersPaused },
-            set: { newValue in
-                var settings = model.settingsStore.settings
-                settings.remindersPaused = newValue
                 model.settingsStore.settings = settings
             }
         )
