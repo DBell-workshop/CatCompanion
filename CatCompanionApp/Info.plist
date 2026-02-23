@@ -19,7 +19,7 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2026</string>
 	<key>SUFeedURL</key>
-	<string>https://raw.githubusercontent.com/nicedee/CatCompanion/main/appcast.xml</string>
+	<string>https://raw.githubusercontent.com/DBell-workshop/CatCompanion/main/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>GAS1JPPqyj6JpD6DGAgvgXJZNAP3oQqEeDZ3fByO7VM=</string>
 	<key>NSMicrophoneUsageDescription</key>
