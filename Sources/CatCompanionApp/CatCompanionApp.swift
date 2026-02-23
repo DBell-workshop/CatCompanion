@@ -3,11 +3,13 @@ import SwiftUI
 import Darwin
 import AppKit
 import CatCompanionCore
+import Sparkle
 
 @main
 struct CatCompanionApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var model = AppModel()
+    @StateObject private var updaterController = UpdaterController()
 
     init() {
         RuntimeAutomationLog.configure(arguments: ProcessInfo.processInfo.arguments)
@@ -22,7 +24,7 @@ struct CatCompanionApp: App {
 
     var body: some Scene {
         MenuBarExtra {
-            MenuContentView(model: model)
+            MenuContentView(model: model, updaterController: updaterController)
         } label: {
             Image("MenuBarCatTemplate")
                 .renderingMode(.template)
@@ -231,6 +233,7 @@ private extension CatCompanionApp {
 
 private struct MenuContentView: View {
     @ObservedObject var model: AppModel
+    @ObservedObject var updaterController: UpdaterController
 
     var body: some View {
         Group {
@@ -304,6 +307,11 @@ private struct MenuContentView: View {
             Toggle(AppStrings.text(.menuSystemNotification), isOn: notificationsBinding())
 
             Divider()
+
+            Button(AppStrings.text(.menuCheckForUpdates)) {
+                updaterController.checkForUpdates()
+            }
+            .disabled(!updaterController.canCheckForUpdates)
 
             Button(AppStrings.text(.menuSettings)) {
                 model.openSettingsWindow()

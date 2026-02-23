@@ -24,6 +24,8 @@
 		58B705E2F8134478842ED287 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4267D4B3DBF14C30A7D84FDF /* XCTest.framework */; };
 		68F1561FCD654E90ACC60C57 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D098E15019C40E58020F177 /* SettingsStore.swift */; };
 		KC01A0B1C2D3E4F5A6B7C8D9 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = KC02A0B1C2D3E4F5A6B7C8D9 /* KeychainHelper.swift */; };
+		UC01A1B2C3D4E5F6A7B8C9D0 /* UpdaterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = UC02A1B2C3D4E5F6A7B8C9D0 /* UpdaterController.swift */; };
+		SP03A0B1C2D3E4F5A6B7C8D9 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = SP02A0B1C2D3E4F5A6B7C8D9 /* Sparkle */; };
 		78FB6D46ECF54B7682C37D31 /* ReminderEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8079BE6A294417A525181F /* ReminderEngine.swift */; };
 		870DEACD93D847ADABAAC56F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48305471E9C04193BD549B55 /* NotificationManager.swift */; };
 		871671D1AB484705A08A0508 /* ReminderTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254AD27E051C4A4386F8CE86 /* ReminderTypes.swift */; };
@@ -77,6 +79,7 @@
 		4AFC7731205A44EBA3622623 /* PetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetView.swift; sourceTree = "<group>"; };
 		4D098E15019C40E58020F177 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
 		KC02A0B1C2D3E4F5A6B7C8D9 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		UC02A1B2C3D4E5F6A7B8C9D0 /* UpdaterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterController.swift; sourceTree = "<group>"; };
 		6A4D91A0B0D146F8A1202001 /* AssistantChatWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantChatWindowController.swift; sourceTree = "<group>"; };
 		6A4D91A0B0D146F8A1202002 /* AssistantChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantChatView.swift; sourceTree = "<group>"; };
 		6A4D91A0B0D146F8A1202003 /* LocalSpeechRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSpeechRuntime.swift; sourceTree = "<group>"; };
@@ -123,6 +126,7 @@
 				C8A51486D0834AB5BFFB1FFF /* SwiftUI.framework in Frameworks */,
 				2C158CF2DBCD4C4CA2443940 /* UserNotifications.framework in Frameworks */,
 				E0382ADDB4C541E69C073BAD /* libCatCompanionCore.a in Frameworks */,
+				SP03A0B1C2D3E4F5A6B7C8D9 /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,6 +179,7 @@
 				6A4D91A0B0D146F8A1202003 /* LocalSpeechRuntime.swift */,
 				48305471E9C04193BD549B55 /* NotificationManager.swift */,
 				F1898853DDEA4C90B6017853 /* PetWindowController.swift */,
+				UC02A1B2C3D4E5F6A7B8C9D0 /* UpdaterController.swift */,
 				3687EC811FBA4699962E5B6A /* Views */,
 			);
 			path = Sources/CatCompanionApp;
@@ -249,6 +254,9 @@
 				AC1F39D3EEA2410E9A600046 /* PBXTargetDependency */,
 			);
 			name = CatCompanionApp;
+			packageProductDependencies = (
+				SP02A0B1C2D3E4F5A6B7C8D9 /* Sparkle */,
+			);
 			productName = CatCompanionApp;
 			productReference = 8351634D881E44838E22BDBF /* CatCompanion.app */;
 			productType = "com.apple.product-type.application";
@@ -308,6 +316,9 @@
 				ja,
 			);
 			mainGroup = C416B090B4784562ACE0FFCA;
+			packageReferences = (
+				SP01A0B1C2D3E4F5A6B7C8D9 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			productRefGroup = E1274433714347F6B4B62184 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -376,6 +387,7 @@
 				49F8208784D046BEB6E97464 /* PetView.swift in Sources */,
 				9EC5D5CCA0254263AD9B5DA5 /* ReminderBubbleView.swift in Sources */,
 				EDEFBE93CAA74F8AB022F1B9 /* SettingsView.swift in Sources */,
+				UC01A1B2C3D4E5F6A7B8C9D0 /* UpdaterController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -584,6 +596,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		SP01A0B1C2D3E4F5A6B7C8D9 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		SP02A0B1C2D3E4F5A6B7C8D9 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = SP01A0B1C2D3E4F5A6B7C8D9 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = ECE4920C762540A1BF8D7AA8 /* Project object */;
 }

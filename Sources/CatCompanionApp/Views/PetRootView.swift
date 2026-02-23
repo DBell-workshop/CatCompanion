@@ -17,9 +17,10 @@ struct PetRootView: View {
                 speechLevel: assistantRuntime.speechActivityLevel,
                 motionProfile: settingsStore.settings.petMotionProfile,
                 isLowPowerMode: shouldUseLowPowerMode,
-                statusText: statusText
+                statusText: statusText,
+                activeReminderType: reminderEngine.activeReminder
             )
-                .frame(width: 200, height: 240)
+            .frame(width: 200, height: 240)
 
             if let active = reminderEngine.activeReminder {
                 ReminderBubbleView(

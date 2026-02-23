@@ -9,32 +9,39 @@ struct PetView: View {
     let motionProfile: PetMotionProfile
     let isLowPowerMode: Bool
     let statusText: String
+    var activeReminderType: ReminderType?
+
     @State private var animatePulse = false
+    @State private var scanlineOffset: CGFloat = 0
 
     var body: some View {
         ZStack {
+            // --- Background panel ---
             RoundedRectangle(cornerRadius: 28, style: .continuous)
                 .fill(panelBackground)
                 .overlay(
                     RoundedRectangle(cornerRadius: 28, style: .continuous)
                         .stroke(
-                            accentColor.opacity(isSpeaking ? 0.75 : 0.45),
-                            lineWidth: isSpeaking ? 2 : 1
+                            accentColor.opacity(isSpeaking ? 0.80 : 0.45),
+                            lineWidth: isSpeaking ? 2.5 : 1
                         )
                 )
-                .shadow(color: accentColor.opacity(0.25), radius: isSpeaking ? 14 : 8, x: 0, y: 4)
+                .overlay(scanlineOverlay)
+                .shadow(color: accentColor.opacity(0.30), radius: isSpeaking ? 18 : 10, x: 0, y: 4)
                 .frame(width: 178, height: 178)
 
+            // --- Outer pulse ring ---
             Circle()
                 .stroke(accentColor.opacity(0.28), lineWidth: 1)
                 .frame(width: 152, height: 152)
-                .scaleEffect(animatePulse ? 1.03 : 0.97)
-                .opacity(animatePulse ? 0.85 : 0.45)
+                .scaleEffect(animatePulse ? 1.04 : 0.96)
+                .opacity(animatePulse ? 0.85 : 0.40)
                 .animation(
                     .easeInOut(duration: pulseDuration).repeatForever(autoreverses: true),
                     value: animatePulse
                 )
 
+            // --- Rotating dashed orbit ---
             Circle()
                 .stroke(
                     accentColor.opacity(0.36),
@@ -47,23 +54,45 @@ struct PetView: View {
                     value: animatePulse
                 )
 
-            VStack(spacing: 10) {
+            // --- Inner glow ring ---
+            Circle()
+                .stroke(
+                    accentColor.opacity(0.18),
+                    style: StrokeStyle(lineWidth: 0.5, dash: [2, 6])
+                )
+                .frame(width: 100, height: 100)
+                .rotationEffect(.degrees(animatePulse ? -180 : 0))
+                .animation(
+                    .linear(duration: orbitDuration * 1.6).repeatForever(autoreverses: false),
+                    value: animatePulse
+                )
+
+            // --- Content stack ---
+            VStack(spacing: 6) {
+                // Kaomoji character
+                Text(currentKaomoji)
+                    .font(.system(size: 24, weight: .medium, design: .monospaced))
+                    .foregroundStyle(accentColor)
+                    .shadow(color: accentColor.opacity(0.6), radius: 4, x: 0, y: 0)
+
+                // Waveform bars
                 TechWaveformBars(
                     energy: energy,
                     color: accentColor,
                     motionProfile: motionProfile,
                     isLowPowerMode: isLowPowerMode
                 )
-                .frame(width: 132, height: 54)
+                .frame(width: 132, height: 42)
 
-                VStack(spacing: 3) {
+                // Status text
+                VStack(spacing: 2) {
                     Text(AppStrings.text(.appName))
-                        .font(.caption2)
-                        .foregroundStyle(Color.white.opacity(0.58))
+                        .font(.system(size: 9, weight: .light, design: .monospaced))
+                        .foregroundStyle(Color.white.opacity(0.50))
+                        .tracking(2)
 
                     Text(statusText)
-                        .font(.caption)
-                        .fontWeight(.medium)
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
                         .foregroundStyle(Color.white.opacity(0.92))
                         .lineLimit(1)
                         .truncationMode(.tail)
@@ -71,6 +100,7 @@ struct PetView: View {
                 }
             }
 
+            // --- Alert indicator ---
             if isAlerting {
                 Circle()
                     .fill(Color.orange.opacity(0.96))
@@ -79,19 +109,78 @@ struct PetView: View {
                         Circle()
                             .stroke(Color.white, lineWidth: 2)
                     )
+                    .shadow(color: Color.orange.opacity(0.6), radius: 4)
                     .offset(x: 72, y: -72)
             }
         }
         .onAppear {
             animatePulse = true
+            withAnimation(
+                .linear(duration: 4.0).repeatForever(autoreverses: false)
+            ) {
+                scanlineOffset = 178
+            }
         }
     }
+
+    // MARK: - Scanline overlay
+
+    private var scanlineOverlay: some View {
+        RoundedRectangle(cornerRadius: 28, style: .continuous)
+            .fill(Color.clear)
+            .overlay(
+                Rectangle()
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.clear,
+                                accentColor.opacity(0.06),
+                                Color.clear
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .frame(height: 30)
+                    .offset(y: scanlineOffset - 89)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+    }
+
+    // MARK: - Kaomoji mapping
+
+    private var currentKaomoji: String {
+        if statusText.localizedCaseInsensitiveContains("错误")
+            || statusText.localizedCaseInsensitiveContains("error") {
+            return "(=;ω;=)"
+        }
+        if isSpeaking {
+            return "(=^◕ω◕^=)♪"
+        }
+        if isListening {
+            return "(=^・ε・^=)🎤"
+        }
+        if isAlerting {
+            switch activeReminderType {
+            case .hydrate:  return "(=^･ω･^=)💧"
+            case .stand:    return "(=^▽^=)🚶"
+            case .restEyes: return "(=^-ω-^=)💤"
+            case nil:       return "(=^･ω･^=)❗"
+            }
+        }
+        if isLowPowerMode {
+            return "(=^-.-^=)"
+        }
+        return "(=^･ω･^=)"
+    }
+
+    // MARK: - Visual properties
 
     private var panelBackground: LinearGradient {
         LinearGradient(
             colors: [
-                Color(red: 0.05, green: 0.09, blue: 0.16).opacity(0.94),
-                Color(red: 0.03, green: 0.15, blue: 0.21).opacity(0.94)
+                Color(red: 0.03, green: 0.06, blue: 0.14).opacity(0.96),
+                Color(red: 0.02, green: 0.12, blue: 0.20).opacity(0.96)
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
@@ -129,25 +218,19 @@ struct PetView: View {
     }
 
     private var pulseDuration: Double {
-        if isLowPowerMode {
-            return 2.8
-        }
-        if isSpeaking {
-            return motionProfile == .vivid ? 0.8 : 1.2
-        }
+        if isLowPowerMode { return 2.8 }
+        if isSpeaking { return motionProfile == .vivid ? 0.8 : 1.2 }
         return motionProfile == .vivid ? 1.8 : 2.3
     }
 
     private var orbitDuration: Double {
-        if isLowPowerMode {
-            return 8.4
-        }
-        if isSpeaking {
-            return motionProfile == .vivid ? 2.8 : 4.0
-        }
+        if isLowPowerMode { return 8.4 }
+        if isSpeaking { return motionProfile == .vivid ? 2.8 : 4.0 }
         return motionProfile == .vivid ? 6.0 : 7.5
     }
 }
+
+// MARK: - TechWaveformBars
 
 private struct TechWaveformBars: View {
     let energy: CGFloat
@@ -201,9 +284,7 @@ private struct TechWaveformBars: View {
     }
 
     private var frameInterval: TimeInterval {
-        if isLowPowerMode {
-            return 1.0 / 8.0
-        }
+        if isLowPowerMode { return 1.0 / 8.0 }
         return motionProfile == .vivid ? 1.0 / 30.0 : 1.0 / 16.0
     }
 }

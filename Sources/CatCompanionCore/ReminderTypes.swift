@@ -299,6 +299,7 @@ public enum AppStringKey: String {
     case menuAssistantEnabled
     case menuAssistantChat
     case menuDiagnostics
+    case menuCheckForUpdates
     case menuSettings
     case menuQuit
 
@@ -556,6 +557,7 @@ public enum AppStrings {
         .menuAssistantEnabled: "AI 助理",
         .menuAssistantChat: "打开 AI 对话",
         .menuDiagnostics: "环境诊断…",
+        .menuCheckForUpdates: "检查更新…",
         .menuSettings: "设置…",
         .menuQuit: "退出",
         .reminderHydrateName: "喝水",
@@ -733,6 +735,7 @@ public enum AppStrings {
         .menuAssistantEnabled: "AI 助理",
         .menuAssistantChat: "開啟 AI 對話",
         .menuDiagnostics: "環境診斷…",
+        .menuCheckForUpdates: "檢查更新…",
         .menuSettings: "設定…",
         .menuQuit: "結束",
         .reminderHydrateName: "喝水",
@@ -910,6 +913,7 @@ public enum AppStrings {
         .menuAssistantEnabled: "AI Assistant",
         .menuAssistantChat: "Open AI Chat",
         .menuDiagnostics: "Environment Diagnostics…",
+        .menuCheckForUpdates: "Check for Updates…",
         .menuSettings: "Settings…",
         .menuQuit: "Quit",
         .reminderHydrateName: "Hydrate",
@@ -1087,6 +1091,7 @@ public enum AppStrings {
         .menuAssistantEnabled: "AI アシスタント",
         .menuAssistantChat: "AI 会話を開く",
         .menuDiagnostics: "環境診断…",
+        .menuCheckForUpdates: "アップデートを確認…",
         .menuSettings: "設定…",
         .menuQuit: "終了",
         .reminderHydrateName: "水分補給",

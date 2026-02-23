@@ -8,7 +8,7 @@ struct ReminderBubbleView: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            Text(reminderType.displayName)
+            Text("\(titleEmoji) \(reminderType.displayName)")
                 .font(.headline)
             Text(reminderType.prompt)
                 .font(.subheadline)
@@ -28,6 +28,14 @@ struct ReminderBubbleView: View {
                 .shadow(color: Color.black.opacity(0.15), radius: 6, x: 0, y: 4)
         )
         .frame(maxWidth: 200)
+    }
+
+    private var titleEmoji: String {
+        switch reminderType {
+        case .hydrate: return "💧"
+        case .stand: return "🚶"
+        case .restEyes: return "💤"
+        }
     }
 }
 
