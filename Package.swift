@@ -9,11 +9,14 @@ let package = Package(
         .executable(name: "CatCompanionApp", targets: ["CatCompanionApp"]),
         .executable(name: "CatCompanionAgent", targets: ["CatCompanionAgent"])
     ],
+    dependencies: [
+        .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.8.1")
+    ],
     targets: [
         .target(name: "CatCompanionCore"),
         .executableTarget(
             name: "CatCompanionApp",
-            dependencies: ["CatCompanionCore"]
+            dependencies: ["CatCompanionCore", .product(name: "Sparkle", package: "Sparkle")]
         ),
         .executableTarget(
             name: "CatCompanionAgent",
