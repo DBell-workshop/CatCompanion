@@ -466,6 +466,45 @@ public enum AppStringKey: String {
     case diagnosticsDetailConnectionFailed
     case diagnosticsDetailAssistantDisabled
     case diagnosticsDetailVoiceDisabled
+
+    case setupWizardTitle
+    case setupWizardWelcome
+    case setupWizardFeatureReminder
+    case setupWizardFeatureAI
+    case setupWizardFeatureVoice
+    case setupWizardModeRecommended
+    case setupWizardModeRecommendedDesc
+    case setupWizardModeFull
+    case setupWizardModeFullDesc
+    case setupWizardModeMinimal
+    case setupWizardModeMinimalDesc
+    case setupWizardStartSetup
+    case setupWizardGatewayTitle
+    case setupWizardGatewayDetecting
+    case setupWizardGatewayReady
+    case setupWizardGatewayNotFound
+    case setupWizardGatewayInstallHint
+    case setupWizardGatewayAddress
+    case setupWizardGatewayToken
+    case setupWizardGatewayRecheck
+    case setupWizardGatewaySkip
+    case setupWizardVoiceTitle
+    case setupWizardVoiceDetecting
+    case setupWizardVoiceInstallDeps
+    case setupWizardVoiceWhisperModel
+    case setupWizardVoiceSkip
+    case setupWizardVoiceBrowse
+    case setupWizardDoneTitle
+    case setupWizardDoneSubtitle
+    case setupWizardDoneSettingsHint
+    case setupWizardDoneDiagHint
+    case setupWizardStartUsing
+    case setupWizardPrevious
+    case setupWizardNext
+    case setupWizardSkip
+    case setupWizardStatusReady
+    case setupWizardStatusNotConfigured
+    case setupWizardStatusNotEnabled
 }
 
 public enum AppStrings {
@@ -717,7 +756,45 @@ public enum AppStrings {
         .diagnosticsDetailConnected: "已连接",
         .diagnosticsDetailConnectionFailed: "连接失败",
         .diagnosticsDetailAssistantDisabled: "AI 助理未启用，已跳过实时连通性检测",
-        .diagnosticsDetailVoiceDisabled: "本地语音未启用，已跳过"
+        .diagnosticsDetailVoiceDisabled: "本地语音未启用，已跳过",
+        .setupWizardTitle: "设置向导",
+        .setupWizardWelcome: "欢迎使用猫咪伴侣！",
+        .setupWizardFeatureReminder: "健康提醒 — 定时提醒喝水、站立、休息眼睛",
+        .setupWizardFeatureAI: "AI 助理 — 智能对话伴侣（需要 OpenClaw Gateway）",
+        .setupWizardFeatureVoice: "语音交互 — 用声音和猫咪对话（可选）",
+        .setupWizardModeRecommended: "推荐模式",
+        .setupWizardModeRecommendedDesc: "健康提醒 + AI 助理",
+        .setupWizardModeFull: "完整模式",
+        .setupWizardModeFullDesc: "健康提醒 + AI 助理 + 语音",
+        .setupWizardModeMinimal: "精简模式",
+        .setupWizardModeMinimalDesc: "仅健康提醒",
+        .setupWizardStartSetup: "开始配置",
+        .setupWizardGatewayTitle: "AI 助理配置",
+        .setupWizardGatewayDetecting: "正在检测 Gateway…",
+        .setupWizardGatewayReady: "OpenClaw Gateway 已就绪",
+        .setupWizardGatewayNotFound: "未检测到 OpenClaw Gateway",
+        .setupWizardGatewayInstallHint: "OpenClaw Gateway 是本地 AI 推理服务，需要单独安装运行。请安装并启动 Gateway 后点击「重新检测」。",
+        .setupWizardGatewayAddress: "Gateway 地址",
+        .setupWizardGatewayToken: "Gateway Token（可选，留空跳过）",
+        .setupWizardGatewayRecheck: "重新检测",
+        .setupWizardGatewaySkip: "跳过，稍后配置",
+        .setupWizardVoiceTitle: "语音功能配置",
+        .setupWizardVoiceDetecting: "正在检测语音组件…",
+        .setupWizardVoiceInstallDeps: "安装缺失的依赖：pip3 install modelscope torch torchaudio",
+        .setupWizardVoiceWhisperModel: "Whisper 模型路径",
+        .setupWizardVoiceSkip: "跳过语音",
+        .setupWizardVoiceBrowse: "浏览…",
+        .setupWizardDoneTitle: "配置完成！",
+        .setupWizardDoneSubtitle: "猫咪伴侣已经准备好了。",
+        .setupWizardDoneSettingsHint: "你可以随时在菜单栏 → 设置中修改这些配置。",
+        .setupWizardDoneDiagHint: "如果遇到问题，使用菜单栏 → 诊断工具来检查。",
+        .setupWizardStartUsing: "开始使用",
+        .setupWizardPrevious: "上一步",
+        .setupWizardNext: "下一步",
+        .setupWizardSkip: "跳过",
+        .setupWizardStatusReady: "已就绪",
+        .setupWizardStatusNotConfigured: "未配置",
+        .setupWizardStatusNotEnabled: "未启用"
     ]
 
     private static let zhHantTable: [AppStringKey: String] = [
@@ -895,7 +972,45 @@ public enum AppStrings {
         .diagnosticsDetailConnected: "已連線",
         .diagnosticsDetailConnectionFailed: "連線失敗",
         .diagnosticsDetailAssistantDisabled: "AI 助理未啟用，已跳過即時連線檢查",
-        .diagnosticsDetailVoiceDisabled: "本機語音未啟用，已跳過"
+        .diagnosticsDetailVoiceDisabled: "本機語音未啟用，已跳過",
+        .setupWizardTitle: "設定精靈",
+        .setupWizardWelcome: "歡迎使用貓咪伴侶！",
+        .setupWizardFeatureReminder: "健康提醒 — 定時提醒喝水、站立、休息眼睛",
+        .setupWizardFeatureAI: "AI 助理 — 智慧對話伴侶（需要 OpenClaw Gateway）",
+        .setupWizardFeatureVoice: "語音互動 — 用聲音和貓咪對話（可選）",
+        .setupWizardModeRecommended: "推薦模式",
+        .setupWizardModeRecommendedDesc: "健康提醒 + AI 助理",
+        .setupWizardModeFull: "完整模式",
+        .setupWizardModeFullDesc: "健康提醒 + AI 助理 + 語音",
+        .setupWizardModeMinimal: "精簡模式",
+        .setupWizardModeMinimalDesc: "僅健康提醒",
+        .setupWizardStartSetup: "開始設定",
+        .setupWizardGatewayTitle: "AI 助理設定",
+        .setupWizardGatewayDetecting: "正在偵測 Gateway…",
+        .setupWizardGatewayReady: "OpenClaw Gateway 已就緒",
+        .setupWizardGatewayNotFound: "未偵測到 OpenClaw Gateway",
+        .setupWizardGatewayInstallHint: "OpenClaw Gateway 是本機 AI 推理服務，需要另外安裝執行。請安裝並啟動 Gateway 後點選「重新偵測」。",
+        .setupWizardGatewayAddress: "Gateway 位址",
+        .setupWizardGatewayToken: "Gateway Token（選填，留空跳過）",
+        .setupWizardGatewayRecheck: "重新偵測",
+        .setupWizardGatewaySkip: "跳過，稍後設定",
+        .setupWizardVoiceTitle: "語音功能設定",
+        .setupWizardVoiceDetecting: "正在偵測語音元件…",
+        .setupWizardVoiceInstallDeps: "安裝缺失的依賴：pip3 install modelscope torch torchaudio",
+        .setupWizardVoiceWhisperModel: "Whisper 模型路徑",
+        .setupWizardVoiceSkip: "跳過語音",
+        .setupWizardVoiceBrowse: "瀏覽…",
+        .setupWizardDoneTitle: "設定完成！",
+        .setupWizardDoneSubtitle: "貓咪伴侶已經準備好了。",
+        .setupWizardDoneSettingsHint: "你可以隨時在選單列 → 設定中修改這些設定。",
+        .setupWizardDoneDiagHint: "如果遇到問題，使用選單列 → 診斷工具來檢查。",
+        .setupWizardStartUsing: "開始使用",
+        .setupWizardPrevious: "上一步",
+        .setupWizardNext: "下一步",
+        .setupWizardSkip: "跳過",
+        .setupWizardStatusReady: "已就緒",
+        .setupWizardStatusNotConfigured: "未設定",
+        .setupWizardStatusNotEnabled: "未啟用"
     ]
 
     private static let enTable: [AppStringKey: String] = [
@@ -1073,7 +1188,45 @@ public enum AppStrings {
         .diagnosticsDetailConnected: "Connected",
         .diagnosticsDetailConnectionFailed: "Connection failed",
         .diagnosticsDetailAssistantDisabled: "Assistant is disabled, skipped live connectivity probe",
-        .diagnosticsDetailVoiceDisabled: "Local voice is disabled, skipped"
+        .diagnosticsDetailVoiceDisabled: "Local voice is disabled, skipped",
+        .setupWizardTitle: "Setup Wizard",
+        .setupWizardWelcome: "Welcome to Cat Companion!",
+        .setupWizardFeatureReminder: "Health Reminders — Timed reminders for hydration, standing, and eye rest",
+        .setupWizardFeatureAI: "AI Assistant — Smart chat companion (requires OpenClaw Gateway)",
+        .setupWizardFeatureVoice: "Voice Interaction — Talk to your cat companion (optional)",
+        .setupWizardModeRecommended: "Recommended",
+        .setupWizardModeRecommendedDesc: "Health Reminders + AI Assistant",
+        .setupWizardModeFull: "Full",
+        .setupWizardModeFullDesc: "Health Reminders + AI Assistant + Voice",
+        .setupWizardModeMinimal: "Minimal",
+        .setupWizardModeMinimalDesc: "Health Reminders only",
+        .setupWizardStartSetup: "Start Setup",
+        .setupWizardGatewayTitle: "AI Assistant Setup",
+        .setupWizardGatewayDetecting: "Detecting Gateway…",
+        .setupWizardGatewayReady: "OpenClaw Gateway is ready",
+        .setupWizardGatewayNotFound: "OpenClaw Gateway not detected",
+        .setupWizardGatewayInstallHint: "OpenClaw Gateway is a local AI inference service that must be installed separately. Please install and start Gateway, then tap Recheck.",
+        .setupWizardGatewayAddress: "Gateway Address",
+        .setupWizardGatewayToken: "Gateway Token (optional, leave blank to skip)",
+        .setupWizardGatewayRecheck: "Recheck",
+        .setupWizardGatewaySkip: "Skip, configure later",
+        .setupWizardVoiceTitle: "Voice Setup",
+        .setupWizardVoiceDetecting: "Detecting voice components…",
+        .setupWizardVoiceInstallDeps: "Install missing dependencies: pip3 install modelscope torch torchaudio",
+        .setupWizardVoiceWhisperModel: "Whisper Model Path",
+        .setupWizardVoiceSkip: "Skip Voice",
+        .setupWizardVoiceBrowse: "Browse…",
+        .setupWizardDoneTitle: "Setup Complete!",
+        .setupWizardDoneSubtitle: "Cat Companion is ready to go.",
+        .setupWizardDoneSettingsHint: "You can change these settings anytime from the menu bar → Settings.",
+        .setupWizardDoneDiagHint: "If you run into issues, use menu bar → Environment Diagnostics.",
+        .setupWizardStartUsing: "Get Started",
+        .setupWizardPrevious: "Back",
+        .setupWizardNext: "Next",
+        .setupWizardSkip: "Skip",
+        .setupWizardStatusReady: "Ready",
+        .setupWizardStatusNotConfigured: "Not configured",
+        .setupWizardStatusNotEnabled: "Not enabled"
     ]
 
     private static let jaTable: [AppStringKey: String] = [
@@ -1251,7 +1404,45 @@ public enum AppStrings {
         .diagnosticsDetailConnected: "接続済み",
         .diagnosticsDetailConnectionFailed: "接続失敗",
         .diagnosticsDetailAssistantDisabled: "AI アシスタント無効のため接続チェックをスキップ",
-        .diagnosticsDetailVoiceDisabled: "ローカル音声は無効のためスキップ"
+        .diagnosticsDetailVoiceDisabled: "ローカル音声は無効のためスキップ",
+        .setupWizardTitle: "セットアップウィザード",
+        .setupWizardWelcome: "Cat Companion へようこそ！",
+        .setupWizardFeatureReminder: "ヘルスリマインダー — 水分補給・立ち上がり・目の休憩を定期通知",
+        .setupWizardFeatureAI: "AI アシスタント — スマートチャット（OpenClaw Gateway が必要）",
+        .setupWizardFeatureVoice: "音声インタラクション — 声で猫と会話（オプション）",
+        .setupWizardModeRecommended: "おすすめ",
+        .setupWizardModeRecommendedDesc: "リマインダー + AI アシスタント",
+        .setupWizardModeFull: "フル",
+        .setupWizardModeFullDesc: "リマインダー + AI アシスタント + 音声",
+        .setupWizardModeMinimal: "最小",
+        .setupWizardModeMinimalDesc: "リマインダーのみ",
+        .setupWizardStartSetup: "設定を開始",
+        .setupWizardGatewayTitle: "AI アシスタント設定",
+        .setupWizardGatewayDetecting: "Gateway を検出中…",
+        .setupWizardGatewayReady: "OpenClaw Gateway は準備完了",
+        .setupWizardGatewayNotFound: "OpenClaw Gateway が検出されません",
+        .setupWizardGatewayInstallHint: "OpenClaw Gateway はローカル AI 推論サービスです。別途インストールが必要です。インストール後「再検出」を押してください。",
+        .setupWizardGatewayAddress: "Gateway アドレス",
+        .setupWizardGatewayToken: "Gateway トークン（任意、空欄でスキップ）",
+        .setupWizardGatewayRecheck: "再検出",
+        .setupWizardGatewaySkip: "スキップして後で設定",
+        .setupWizardVoiceTitle: "音声機能設定",
+        .setupWizardVoiceDetecting: "音声コンポーネントを検出中…",
+        .setupWizardVoiceInstallDeps: "不足する依存をインストール：pip3 install modelscope torch torchaudio",
+        .setupWizardVoiceWhisperModel: "Whisper モデルパス",
+        .setupWizardVoiceSkip: "音声をスキップ",
+        .setupWizardVoiceBrowse: "参照…",
+        .setupWizardDoneTitle: "設定完了！",
+        .setupWizardDoneSubtitle: "Cat Companion の準備ができました。",
+        .setupWizardDoneSettingsHint: "メニューバー → 設定からいつでも変更できます。",
+        .setupWizardDoneDiagHint: "問題がある場合はメニューバー → 環境診断をお使いください。",
+        .setupWizardStartUsing: "使い始める",
+        .setupWizardPrevious: "戻る",
+        .setupWizardNext: "次へ",
+        .setupWizardSkip: "スキップ",
+        .setupWizardStatusReady: "準備完了",
+        .setupWizardStatusNotConfigured: "未設定",
+        .setupWizardStatusNotEnabled: "未有効"
     ]
 }
 

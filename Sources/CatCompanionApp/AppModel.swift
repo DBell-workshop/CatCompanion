@@ -324,6 +324,49 @@ enum StartupDiagnosticsRunner {
         }.value
     }
 
+    // MARK: - Wizard helpers
+
+    static func probeGatewayConnection(
+        url: String, token: String
+    ) async -> (ok: Bool, detail: String) {
+        let trimmed = url.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty,
+              var components = URLComponents(string: trimmed),
+              let scheme = components.scheme?.lowercased() else {
+            return (false, "invalid_url")
+        }
+        if scheme == "http" { components.scheme = "ws" }
+        else if scheme == "https" { components.scheme = "wss" }
+        guard let normalizedScheme = components.scheme?.lowercased(),
+              normalizedScheme == "ws" || normalizedScheme == "wss",
+              let wsURL = components.url else {
+            return (false, "invalid_url")
+        }
+        let result = await probeGateway(url: wsURL, token: token)
+        switch result {
+        case .ok:
+            return (true, trimmed)
+        case .failed(let reason):
+            return (false, reason)
+        }
+    }
+
+    static func checkVoiceComponents(
+        whisperCommand: String,
+        whisperModelPath: String,
+        pythonCommand: String,
+        cosyVoiceScriptPath: String
+    ) async -> [StartupDiagnosticCheck] {
+        await Task.detached(priority: .userInitiated) {
+            var checks: [StartupDiagnosticCheck] = []
+            checks.append(buildWhisperCommandCheck(command: whisperCommand, voiceEnabled: true))
+            checks.append(buildWhisperModelCheck(modelPath: whisperModelPath, voiceEnabled: true))
+            checks.append(buildCosyScriptCheck(scriptPath: cosyVoiceScriptPath, voiceEnabled: true))
+            checks.append(buildPythonDependenciesCheck(pythonCommand: pythonCommand, voiceEnabled: true))
+            return checks
+        }.value
+    }
+
     private static func buildChecks(input: StartupDiagnosticInput) async -> [StartupDiagnosticCheck] {
         var checks: [StartupDiagnosticCheck] = []
 
@@ -1012,16 +1055,16 @@ final class DiagnosticsGuideWindowController {
     private let window: NSWindow
 
     init(appModel: AppModel) {
-        let rootView = DiagnosticsGuideView(appModel: appModel)
+        let rootView = SetupWizardView(appModel: appModel)
         let hosting = NSHostingView(rootView: rootView)
 
         let window = NSWindow(
-            contentRect: NSRect(x: 220, y: 160, width: 620, height: 520),
+            contentRect: NSRect(x: 220, y: 160, width: 560, height: 480),
             styleMask: [.titled, .closable, .miniaturizable],
             backing: .buffered,
             defer: false
         )
-        window.title = AppStrings.text(.diagnosticsGuideTitle)
+        window.title = AppStrings.text(.setupWizardTitle)
         window.isReleasedWhenClosed = false
         window.contentView = hosting
         window.setFrameAutosaveName("DiagnosticsGuideWindow")
@@ -1038,338 +1081,542 @@ final class DiagnosticsGuideWindowController {
     }
 }
 
-private struct DiagnosticsGuideView: View {
+// MARK: - Setup Wizard
+
+private struct SetupWizardView: View {
     @ObservedObject var appModel: AppModel
-    @State private var currentPhase: Int = 0
+    @State private var currentStep = 0
+    @State private var selectedMode = 0
 
-    private var basicChecks: [StartupDiagnosticCheck] {
-        appModel.diagnosticsChecks.filter {
-            ["helper", "gateway", "microphone"].contains($0.id)
-        }
-    }
+    // Gateway
+    @State private var isProbing = false
+    @State private var gatewayOK = false
+    @State private var gatewayDetail = ""
+    @State private var gatewayURL = "ws://127.0.0.1:18789"
+    @State private var gatewayToken = ""
 
-    private var advancedChecks: [StartupDiagnosticCheck] {
-        appModel.diagnosticsChecks.filter {
-            !["helper", "gateway", "microphone"].contains($0.id)
-        }
-    }
+    // Voice
+    @State private var voiceChecks: [StartupDiagnosticCheck] = []
+    @State private var isCheckingVoice = false
+    @State private var whisperModelPath = ""
+
+    private var totalSteps: Int { selectedMode == 1 ? 4 : (selectedMode == 2 ? 2 : 3) }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // Header
-            VStack(alignment: .leading, spacing: 4) {
-                Text(AppStrings.text(.diagnosticsGuideTitle))
-                    .font(.title2)
-                    .fontWeight(.bold)
-                Text(AppStrings.text(.diagnosticsGuideSubtitle))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-            .padding(.bottom, 16)
-
-            // Phase indicator
-            HStack(spacing: 12) {
-                DiagnosticsPhaseTab(
-                    title: AppStrings.text(.diagnosticsGuidePhaseBasicTitle),
-                    index: 0,
-                    currentPhase: currentPhase,
-                    action: { currentPhase = 0 }
-                )
-                DiagnosticsPhaseTab(
-                    title: AppStrings.text(.diagnosticsGuidePhaseAdvancedTitle),
-                    index: 1,
-                    currentPhase: currentPhase,
-                    action: { currentPhase = 1 }
-                )
-            }
-            .padding(.bottom, 12)
-
-            Divider()
-                .padding(.bottom, 12)
-
-            // Phase content
-            if currentPhase == 0 {
-                phaseBasicContent
-            } else {
-                phaseAdvancedContent
-            }
-
-            Spacer(minLength: 8)
-
-            Divider()
-                .padding(.vertical, 8)
-
-            // Bottom navigation
-            bottomBar
-        }
-        .padding(20)
-        .frame(minWidth: 580, minHeight: 520)
-    }
-
-    // MARK: - Phase 1: Basic Setup
-
-    private var phaseBasicContent: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(AppStrings.text(.diagnosticsGuidePhaseBasicSubtitle))
-                .font(.callout)
-                .foregroundStyle(.secondary)
-
-            DiagnosticsQuickStartCard(
-                onOpenSettings: { appModel.openSettingsWindow() }
-            )
-
-            if !basicChecks.isEmpty {
-                VStack(alignment: .leading, spacing: 6) {
-                    ForEach(basicChecks) { check in
-                        DiagnosticsCheckRow(check: check)
-                    }
+        VStack(spacing: 0) {
+            // Step indicator
+            HStack(spacing: 8) {
+                ForEach(0..<totalSteps, id: \.self) { i in
+                    Circle()
+                        .fill(i == currentStep ? Color.accentColor : Color.secondary.opacity(0.3))
+                        .frame(width: 8, height: 8)
                 }
-                .padding(.top, 4)
             }
+            .padding(.top, 16)
+            .padding(.bottom, 12)
+            .animation(.easeInOut(duration: 0.2), value: currentStep)
 
-            if appModel.isRunningDiagnostics {
-                Text(AppStrings.text(.diagnosticsGuideChecking))
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-            } else if let lastChecked = appModel.diagnosticsLastCheckedAt {
-                Text("\(AppStrings.text(.diagnosticsGuideLastChecked)): \(Self.dateFormatter.string(from: lastChecked))")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+            Divider()
+
+            // Content
+            Group {
+                switch stepContentType(currentStep) {
+                case .welcome: welcomeStep
+                case .gateway: gatewayStep
+                case .voice: voiceStep
+                case .done: doneStep
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 16)
+
+            Divider()
+
+            // Navigation
+            bottomBar
+                .padding(.horizontal, 24)
+                .padding(.vertical, 12)
+        }
+        .frame(minWidth: 520, minHeight: 460)
+        .onAppear {
+            gatewayURL = appModel.settingsStore.settings.assistant.gatewayURL
+            gatewayToken = appModel.settingsStore.settings.assistant.gatewayToken
+            whisperModelPath = appModel.settingsStore.settings.assistant.voiceSettings.whisperModelPath
         }
     }
 
-    // MARK: - Phase 2: Advanced Features
+    // MARK: - Step 1: Welcome
 
-    private var phaseAdvancedContent: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(AppStrings.text(.diagnosticsGuidePhaseAdvancedSubtitle))
-                .font(.callout)
-                .foregroundStyle(.secondary)
+    private var welcomeStep: some View {
+        VStack(spacing: 16) {
+            Text("(=^･ω･^=)")
+                .font(.system(size: 36, design: .monospaced))
+                .padding(.top, 8)
 
-            // Skip hint
-            HStack(spacing: 6) {
-                Image(systemName: "info.circle")
-                    .foregroundStyle(.blue)
-                    .font(.caption)
-                Text(AppStrings.text(.diagnosticsGuidePhaseAdvancedSkipHint))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            Text(AppStrings.text(.setupWizardWelcome))
+                .font(.title2)
+                .fontWeight(.bold)
+
+            VStack(alignment: .leading, spacing: 8) {
+                featureRow(icon: "bell.badge", text: AppStrings.text(.setupWizardFeatureReminder))
+                featureRow(icon: "brain.head.profile", text: AppStrings.text(.setupWizardFeatureAI))
+                featureRow(icon: "mic", text: AppStrings.text(.setupWizardFeatureVoice))
             }
-            .padding(8)
+            .padding(.vertical, 8)
+
+            VStack(alignment: .leading, spacing: 6) {
+                modeRadio(index: 0,
+                          title: AppStrings.text(.setupWizardModeRecommended),
+                          desc: AppStrings.text(.setupWizardModeRecommendedDesc),
+                          recommended: true)
+                modeRadio(index: 1,
+                          title: AppStrings.text(.setupWizardModeFull),
+                          desc: AppStrings.text(.setupWizardModeFullDesc))
+                modeRadio(index: 2,
+                          title: AppStrings.text(.setupWizardModeMinimal),
+                          desc: AppStrings.text(.setupWizardModeMinimalDesc))
+            }
+
+            Spacer(minLength: 0)
+        }
+    }
+
+    private func featureRow(icon: String, text: String) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: icon)
+                .frame(width: 20)
+                .foregroundStyle(.secondary)
+            Text(text)
+                .font(.callout)
+        }
+    }
+
+    private func modeRadio(index: Int, title: String, desc: String, recommended: Bool = false) -> some View {
+        Button {
+            selectedMode = index
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: selectedMode == index ? "largecircle.fill.circle" : "circle")
+                    .foregroundStyle(selectedMode == index ? Color.accentColor : .secondary)
+                VStack(alignment: .leading, spacing: 1) {
+                    HStack(spacing: 6) {
+                        Text(title).font(.subheadline).fontWeight(.medium)
+                        if recommended {
+                            Text("★")
+                                .font(.caption2)
+                                .foregroundStyle(.orange)
+                        }
+                    }
+                    Text(desc).font(.caption).foregroundStyle(.secondary)
+                }
+                Spacer()
+            }
+            .padding(.vertical, 6)
+            .padding(.horizontal, 10)
             .background(
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(Color.blue.opacity(0.06))
+                    .fill(selectedMode == index ? Color.accentColor.opacity(0.08) : Color.clear)
             )
+        }
+        .buttonStyle(.plain)
+    }
 
-            ScrollView {
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(advancedChecks) { check in
-                        DiagnosticsCheckRow(check: check)
+    // MARK: - Step 2: Gateway
+
+    private var gatewayStep: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Label(AppStrings.text(.setupWizardGatewayTitle), systemImage: "brain.head.profile")
+                .font(.title3)
+                .fontWeight(.semibold)
+
+            if isProbing {
+                HStack(spacing: 8) {
+                    ProgressView().controlSize(.small)
+                    Text(AppStrings.text(.setupWizardGatewayDetecting))
+                        .font(.callout).foregroundStyle(.secondary)
+                }
+            } else if gatewayOK {
+                HStack(spacing: 8) {
+                    Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+                    Text(AppStrings.text(.setupWizardGatewayReady))
+                        .font(.callout)
+                }
+                Text(gatewayDetail)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } else {
+                HStack(spacing: 8) {
+                    Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
+                    Text(AppStrings.text(.setupWizardGatewayNotFound))
+                        .font(.callout)
+                }
+                if !gatewayDetail.isEmpty {
+                    Text(gatewayDetail)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Text(AppStrings.text(.setupWizardGatewayInstallHint))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(Color.orange.opacity(0.06))
+                    )
+            }
+
+            Divider().padding(.vertical, 4)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(AppStrings.text(.setupWizardGatewayAddress))
+                    .font(.subheadline).fontWeight(.medium)
+                TextField("ws://127.0.0.1:18789", text: $gatewayURL)
+                    .textFieldStyle(.roundedBorder)
+
+                Text(AppStrings.text(.setupWizardGatewayToken))
+                    .font(.subheadline).fontWeight(.medium)
+                SecureField("", text: $gatewayToken)
+                    .textFieldStyle(.roundedBorder)
+            }
+
+            HStack {
+                Button(AppStrings.text(.setupWizardGatewayRecheck)) {
+                    probeGateway()
+                }
+                .disabled(isProbing)
+                Spacer()
+            }
+
+            Spacer(minLength: 0)
+        }
+        .onAppear { probeGateway() }
+    }
+
+    private func probeGateway() {
+        isProbing = true
+        gatewayOK = false
+        gatewayDetail = ""
+        Task {
+            let result = await StartupDiagnosticsRunner.probeGatewayConnection(
+                url: gatewayURL, token: gatewayToken
+            )
+            isProbing = false
+            gatewayOK = result.ok
+            gatewayDetail = result.detail
+        }
+    }
+
+    private func saveGatewaySettings() {
+        var settings = appModel.settingsStore.settings
+        settings.assistant.gatewayURL = gatewayURL
+        settings.assistant.gatewayToken = gatewayToken
+        appModel.settingsStore.settings = settings
+    }
+
+    // MARK: - Step 3: Voice (full mode only)
+
+    private var voiceStep: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Label(AppStrings.text(.setupWizardVoiceTitle), systemImage: "mic")
+                .font(.title3)
+                .fontWeight(.semibold)
+
+            if isCheckingVoice {
+                HStack(spacing: 8) {
+                    ProgressView().controlSize(.small)
+                    Text(AppStrings.text(.setupWizardVoiceDetecting))
+                        .font(.callout).foregroundStyle(.secondary)
+                }
+            }
+
+            if !voiceChecks.isEmpty {
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(voiceChecks) { check in
+                        WizardCheckRow(check: check)
                     }
                 }
             }
 
-            if appModel.isRunningDiagnostics {
-                Text(AppStrings.text(.diagnosticsGuideChecking))
-                    .font(.callout)
+            let hasMissing = voiceChecks.contains { $0.status == .failed }
+            if hasMissing && !isCheckingVoice {
+                Text(AppStrings.text(.setupWizardVoiceInstallDeps))
+                    .font(.caption)
                     .foregroundStyle(.secondary)
+                    .padding(10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(Color.orange.opacity(0.06))
+                    )
+            }
+
+            Divider().padding(.vertical, 4)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(AppStrings.text(.setupWizardVoiceWhisperModel))
+                    .font(.subheadline).fontWeight(.medium)
+                HStack {
+                    TextField("", text: $whisperModelPath)
+                        .textFieldStyle(.roundedBorder)
+                    Button(AppStrings.text(.setupWizardVoiceBrowse)) {
+                        browseWhisperModel()
+                    }
+                }
+            }
+
+            Spacer(minLength: 0)
+        }
+        .onAppear { checkVoice() }
+    }
+
+    private func checkVoice() {
+        isCheckingVoice = true
+        voiceChecks = []
+        let settings = appModel.settingsStore.settings.assistant.voiceSettings
+        Task {
+            let checks = await StartupDiagnosticsRunner.checkVoiceComponents(
+                whisperCommand: settings.whisperCommand,
+                whisperModelPath: whisperModelPath.isEmpty ? settings.whisperModelPath : whisperModelPath,
+                pythonCommand: settings.pythonCommand,
+                cosyVoiceScriptPath: settings.cosyVoiceScriptPath
+            )
+            voiceChecks = checks
+            isCheckingVoice = false
+        }
+    }
+
+    private func saveVoiceSettings() {
+        var settings = appModel.settingsStore.settings
+        if !whisperModelPath.isEmpty {
+            settings.assistant.voiceSettings.whisperModelPath = whisperModelPath
+        }
+        appModel.settingsStore.settings = settings
+    }
+
+    private func browseWhisperModel() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.data]
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.message = AppStrings.text(.setupWizardVoiceWhisperModel)
+        if panel.runModal() == .OK, let url = panel.url {
+            whisperModelPath = url.path
+        }
+    }
+
+    // MARK: - Final Step: Done
+
+    private var doneStep: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "checkmark.circle")
+                .font(.system(size: 44))
+                .foregroundStyle(.green)
+                .padding(.top, 12)
+
+            Text(AppStrings.text(.setupWizardDoneTitle))
+                .font(.title2)
+                .fontWeight(.bold)
+
+            Text(AppStrings.text(.setupWizardDoneSubtitle))
+                .font(.callout)
+                .foregroundStyle(.secondary)
+
+            VStack(alignment: .leading, spacing: 8) {
+                summaryRow(icon: "bell.badge",
+                           label: AppStrings.text(.setupWizardFeatureReminder),
+                           status: AppStrings.text(.setupWizardStatusReady),
+                           ok: true)
+
+                if selectedMode != 2 {
+                    summaryRow(icon: "brain.head.profile",
+                               label: AppStrings.text(.setupWizardFeatureAI),
+                               status: gatewayOK
+                                   ? AppStrings.text(.setupWizardStatusReady)
+                                   : AppStrings.text(.setupWizardStatusNotConfigured),
+                               ok: gatewayOK)
+                }
+
+                if selectedMode == 1 {
+                    let voiceOK = !voiceChecks.contains { $0.status == .failed }
+                    summaryRow(icon: "mic",
+                               label: AppStrings.text(.setupWizardFeatureVoice),
+                               status: voiceOK
+                                   ? AppStrings.text(.setupWizardStatusReady)
+                                   : AppStrings.text(.setupWizardStatusNotConfigured),
+                               ok: voiceOK)
+                }
+            }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color.secondary.opacity(0.06))
+            )
+
+            VStack(alignment: .leading, spacing: 4) {
+                Label(AppStrings.text(.setupWizardDoneSettingsHint), systemImage: "gearshape")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Label(AppStrings.text(.setupWizardDoneDiagHint), systemImage: "wrench.and.screwdriver")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer(minLength: 0)
+        }
+    }
+
+    private func summaryRow(icon: String, label: String, status: String, ok: Bool) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: icon)
+                .frame(width: 20)
+                .foregroundStyle(.secondary)
+            Text(label).font(.callout).lineLimit(1)
+            Spacer()
+            HStack(spacing: 4) {
+                Image(systemName: ok ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                    .font(.caption)
+                    .foregroundStyle(ok ? .green : .orange)
+                Text(status).font(.caption).foregroundStyle(ok ? .green : .orange)
             }
         }
     }
 
-    // MARK: - Bottom Bar
+    // MARK: - Bottom Navigation
 
     private var bottomBar: some View {
         HStack {
-            if currentPhase == 1 {
-                Button(AppStrings.text(.diagnosticsGuidePreviousStep)) {
-                    currentPhase = 0
+            if currentStep > 0 {
+                Button(AppStrings.text(.setupWizardPrevious)) {
+                    goBack()
                 }
-            }
-
-            Button(AppStrings.text(.diagnosticsGuideRunAgain)) {
-                appModel.runDiagnostics()
-            }
-            .disabled(appModel.isRunningDiagnostics)
-
-            Button(AppStrings.text(.diagnosticsGuideOpenSettings)) {
-                appModel.openSettingsWindow()
             }
 
             Spacer()
 
-            if currentPhase == 0 {
-                Button(AppStrings.text(.diagnosticsGuideSkip)) {
-                    appModel.completeDiagnosticsGuide()
-                }
-
-                Button(AppStrings.text(.diagnosticsGuideNextStep)) {
-                    currentPhase = 1
+            if isLastStep {
+                Button(AppStrings.text(.setupWizardStartUsing)) {
+                    finishWizard()
                 }
                 .buttonStyle(.borderedProminent)
             } else {
-                Button(AppStrings.text(.diagnosticsGuideSkip)) {
-                    appModel.completeDiagnosticsGuide()
+                Button(AppStrings.text(.setupWizardSkip)) {
+                    finishWizard()
                 }
-
-                Button(AppStrings.text(.diagnosticsGuideDone)) {
-                    appModel.completeDiagnosticsGuide()
+                Button(currentStep == 0
+                       ? AppStrings.text(.setupWizardStartSetup)
+                       : AppStrings.text(.setupWizardNext)) {
+                    goNext()
                 }
                 .buttonStyle(.borderedProminent)
             }
         }
     }
 
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter
-    }()
-}
+    private var isLastStep: Bool {
+        currentStep == totalSteps - 1
+    }
 
-// MARK: - Phase Tab
-
-private struct DiagnosticsPhaseTab: View {
-    let title: String
-    let index: Int
-    let currentPhase: Int
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .font(.subheadline)
-                .fontWeight(index == currentPhase ? .semibold : .regular)
-                .foregroundStyle(index == currentPhase ? .primary : .secondary)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(index == currentPhase ? Color.accentColor.opacity(0.12) : Color.clear)
-                )
+    private func goNext() {
+        applyCurrentStepSettings()
+        withAnimation(.easeInOut(duration: 0.2)) {
+            currentStep = min(currentStep + 1, totalSteps - 1)
         }
-        .buttonStyle(.plain)
+    }
+
+    private func goBack() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            currentStep = max(currentStep - 1, 0)
+        }
+    }
+
+    private func applyCurrentStepSettings() {
+        if currentStep == 0 {
+            applyModePreset()
+        } else if !isLastStep {
+            // Save gateway or voice settings when leaving those steps
+            let stepContent = stepContentType(currentStep)
+            if stepContent == .gateway { saveGatewaySettings() }
+            if stepContent == .voice { saveVoiceSettings() }
+        }
+    }
+
+    private enum StepContentType { case welcome, gateway, voice, done }
+
+    private func stepContentType(_ step: Int) -> StepContentType {
+        switch step {
+        case 0: return .welcome
+        case 1: return selectedMode == 2 ? .done : .gateway
+        case 2: return selectedMode == 1 ? .voice : .done
+        case 3: return .done
+        default: return .done
+        }
+    }
+
+    private func applyModePreset() {
+        var settings = appModel.settingsStore.settings
+        switch selectedMode {
+        case 0: // Recommended
+            settings.assistant.enabled = true
+            settings.assistant.autoStartHelper = true
+            settings.assistant.voiceSettings.enabled = false
+        case 1: // Full
+            settings.assistant.enabled = true
+            settings.assistant.autoStartHelper = true
+            settings.assistant.voiceSettings.enabled = true
+        case 2: // Minimal
+            settings.assistant.enabled = false
+        default:
+            break
+        }
+        appModel.settingsStore.settings = settings
+    }
+
+    private func finishWizard() {
+        applyCurrentStepSettings()
+        appModel.completeDiagnosticsGuide()
     }
 }
 
-// MARK: - Quick Start Card
+// MARK: - Wizard Check Row
 
-private struct DiagnosticsQuickStartCard: View {
-    let onOpenSettings: () -> Void
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(AppStrings.text(.diagnosticsQuickStartTitle))
-                .font(.headline)
-
-            DiagnosticsQuickStartRow(
-                step: 1,
-                title: AppStrings.text(.diagnosticsQuickStartNotificationsTitle),
-                detail: AppStrings.text(.diagnosticsQuickStartNotificationsDetail),
-                actionTitle: AppStrings.text(.diagnosticsGuideOpenSettings),
-                action: onOpenSettings
-            )
-
-            DiagnosticsQuickStartRow(
-                step: 2,
-                title: AppStrings.text(.diagnosticsQuickStartGatewayTitle),
-                detail: AppStrings.text(.diagnosticsQuickStartGatewayDetail),
-                actionTitle: AppStrings.text(.diagnosticsGuideOpenSettings),
-                action: onOpenSettings
-            )
-
-            DiagnosticsQuickStartRow(
-                step: 3,
-                title: AppStrings.text(.diagnosticsQuickStartDisplayTitle),
-                detail: AppStrings.text(.diagnosticsQuickStartDisplayDetail),
-                actionTitle: AppStrings.text(.diagnosticsGuideOpenSettings),
-                action: onOpenSettings
-            )
-        }
-        .padding(12)
-        .background(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(Color.secondary.opacity(0.08))
-        )
-    }
-}
-
-// MARK: - Quick Start Row
-
-private struct DiagnosticsQuickStartRow: View {
-    let step: Int
-    let title: String
-    let detail: String
-    let actionTitle: String
-    let action: () -> Void
-    var actionDisabled: Bool = false
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Text("\(step)")
-                .font(.caption)
-                .fontWeight(.semibold)
-                .frame(width: 20, height: 20)
-                .background(Circle().fill(Color.accentColor.opacity(0.16)))
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                Text(detail)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            Spacer(minLength: 8)
-
-            Button(actionTitle) {
-                action()
-            }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
-            .disabled(actionDisabled)
-        }
-    }
-}
-
-// MARK: - Check Row
-
-private struct DiagnosticsCheckRow: View {
+private struct WizardCheckRow: View {
     let check: StartupDiagnosticCheck
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(alignment: .center, spacing: 8) {
-                Circle()
-                    .fill(statusColor)
-                    .frame(width: 8, height: 8)
+        HStack(spacing: 8) {
+            Image(systemName: statusIcon)
+                .foregroundStyle(statusColor)
+                .font(.caption)
+            VStack(alignment: .leading, spacing: 1) {
                 Text(check.title)
-                    .font(.headline)
-                Text(check.status.label)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                Text(check.detail)
                     .font(.caption)
-                    .foregroundStyle(statusColor)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
             }
-            Text(check.detail)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            Spacer()
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.vertical, 4)
+        .padding(.vertical, 2)
+    }
+
+    private var statusIcon: String {
+        switch check.status {
+        case .pass: return "checkmark.circle.fill"
+        case .warning: return "exclamationmark.triangle.fill"
+        case .failed: return "xmark.circle.fill"
+        }
     }
 
     private var statusColor: Color {
         switch check.status {
-        case .pass:
-            return .green
-        case .warning:
-            return .orange
-        case .failed:
-            return .red
+        case .pass: return .green
+        case .warning: return .orange
+        case .failed: return .red
         }
     }
 }

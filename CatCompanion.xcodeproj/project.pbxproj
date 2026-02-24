@@ -449,6 +449,10 @@
 				CODE_SIGN_ENTITLEMENTS = CatCompanionApp/CatCompanionApp.entitlements;
 				DEVELOPMENT_TEAM = 36Y27GF757;
 				INFOPLIST_FILE = CatCompanionApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hakimi.catcompanion;
 				PRODUCT_NAME = CatCompanion;
@@ -521,6 +525,10 @@
 				CODE_SIGN_ENTITLEMENTS = CatCompanionApp/CatCompanionApp.entitlements;
 				DEVELOPMENT_TEAM = 36Y27GF757;
 				INFOPLIST_FILE = CatCompanionApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hakimi.catcompanion;
 				PRODUCT_NAME = CatCompanion;
